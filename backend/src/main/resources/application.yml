@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: bettina-hardware
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:bettina_hardware}
+    username: ${POSTGRES_USER:bettina}
+    password: ${POSTGRES_PASSWORD:bettina_secret}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+bettina:
+  jwt:
+    secret: ${JWT_SECRET:change-me-to-a-long-random-secret-at-least-256-bits-for-production}
+    expiration-ms: ${JWT_EXPIRATION_MS:86400000}
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000}
+  loyalty:
+    points-per-1000-rwf: ${LOYALTY_POINTS_PER_1000_RWF:1}
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui
+
+logging:
+  level:
+    com.bettina.hardware: INFO
+    org.springframework.web: INFO
