@@ -1,0 +1,5 @@
+# Git commits — sole author only
+
+- All commits must be authored **only** by the repository owner: `isherve <ishimwehervin10@gmail.com>`.
+- **Never** add `Co-authored-by:` trailers (including Cursor, cursoragent@cursor.com, or any AI tool).
+- When creating git commits, use a single-line message with no co-author footer.
