@@ -189,6 +189,16 @@ npm test
 
 Full interactive docs: `http://localhost:8080/swagger-ui`
 
+## Deploy Live
+
+See **[DEPLOY.md](DEPLOY.md)** for full instructions.
+
+| Layer | Host |
+|-------|------|
+| Frontend | [Vercel](https://vercel.com) (`frontend/`) |
+| Backend | [Render](https://render.com) (Docker, `render.yaml`) |
+| Database | [Supabase](https://supabase.com) PostgreSQL |
+
 ## License
 
 Internal use — Bettina Hardware, Kigali, Rwanda.
