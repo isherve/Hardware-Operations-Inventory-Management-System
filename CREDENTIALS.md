@@ -6,9 +6,14 @@
 |------|----------|----------|-------|
 | **Admin** | `admin` | `Admin@Bettina2024` | Full system access |
 | **Manager** | `manager1` | `Manager@2024` | Sales, inventory, reports |
+| **Manager** | `manager2` | `Manager@2024` | Sales, inventory, reports |
 | **Cashier** | `cashier1` | `Cashier@2024` | Point of sale |
+| **Cashier** | `cashier2` | `Cashier@2024` | Point of sale |
+| **Cashier** | `cashier3` | `Cashier@2024` | Point of sale |
 | **Sales Assistant** | `sales1` | `Sales@2024` | Sales & customers |
+| **Sales Assistant** | `sales2` | `Sales@2024` | Sales & customers |
 | **Driver** | `driver1` | `Driver@2024` | Must change password on first login |
+| **Driver** | `driver2` | `Driver@2024` | Delivery staff |
 
 ## Login URLs
 
