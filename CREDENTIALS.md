@@ -15,6 +15,25 @@
 | **Driver** | `driver1` | `Driver@2024` | Must change password on first login |
 | **Driver** | `driver2` | `Driver@2024` | Delivery staff |
 
+## Role permissions
+
+| Action | Admin | Manager | Cashier | Sales Assistant | Driver |
+|--------|:-----:|:-------:|:-------:|:---------------:|:------:|
+| Dashboard | ✓ | ✓ | ✓ | ✓ | ✓ |
+| View inventory | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Adjust stock | ✓ | ✓ | | | |
+| Manage products | ✓ | | | | |
+| New sale | | ✓ | ✓ | ✓ | |
+| View sales | ✓ (all) | ✓ (all) | ✓ (own) | ✓ (own) | |
+| Refund sales | ✓ | ✓ | | | |
+| View customers | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Add/edit customers | ✓ | ✓ | ✓ | ✓ | |
+| Delete customers | ✓ | ✓ | | | |
+| Manage employees | ✓ | | | | |
+| Reports | ✓ | ✓ | | | |
+
+Admin cannot record sales (use a staff account for POS).
+
 ## Login URLs
 
 - **Home:** `http://localhost:3000`

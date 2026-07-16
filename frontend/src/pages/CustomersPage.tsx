@@ -3,12 +3,17 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { api, ApiClientError } from "@/lib/api";
 import type { Customer } from "@/types";
+import { useAuth } from "@/hooks/useAuth";
+import { can } from "@/lib/permissions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function CustomersPage() {
+  const { user } = useAuth();
+  const canManage = can(user, "manageCustomers");
+  const canDelete = can(user, "deleteCustomers");
   const [search, setSearch] = useState("");
   const [editing, setEditing] = useState<Customer | null>(null);
   const [showForm, setShowForm] = useState(false);
@@ -43,11 +48,13 @@ export default function CustomersPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Customers</h1>
-        <Button onClick={() => { setEditing(null); setShowForm(true); }}>Add Customer</Button>
+        {canManage && (
+          <Button onClick={() => { setEditing(null); setShowForm(true); }}>Add Customer</Button>
+        )}
       </div>
       <Input placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} className="max-w-xs" />
 
-      {(showForm || editing) && (
+      {(showForm || editing) && canManage && (
         <CustomerForm
           customer={editing}
           onCancel={() => { setShowForm(false); setEditing(null); }}
@@ -59,12 +66,12 @@ export default function CustomersPage() {
         <CardContent className="p-0">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b bg-slate-50 text-left text-slate-500">
+              <tr className="border-b bg-slate-50 text-left text-slate-500 dark:bg-slate-900 dark:text-slate-400">
                 <th className="p-3">Name</th>
                 <th className="p-3">Phone</th>
                 <th className="p-3">Email</th>
                 <th className="p-3">Loyalty Points</th>
-                <th className="p-3">Actions</th>
+                {(canManage || canDelete) && <th className="p-3">Actions</th>}
               </tr>
             </thead>
             <tbody>
@@ -74,10 +81,16 @@ export default function CustomersPage() {
                   <td className="p-3">{c.phoneNumber || "—"}</td>
                   <td className="p-3">{c.email || "—"}</td>
                   <td className="p-3">{c.loyaltyPoints}</td>
-                  <td className="p-3 space-x-2">
-                    <Button variant="outline" size="sm" onClick={() => { setEditing(c); setShowForm(true); }}>Edit</Button>
-                    <Button variant="destructive" size="sm" onClick={() => { if (confirm("Delete customer?")) remove.mutate(c.customerId); }}>Delete</Button>
-                  </td>
+                  {(canManage || canDelete) && (
+                    <td className="p-3 space-x-2">
+                      {canManage && (
+                        <Button variant="outline" size="sm" onClick={() => { setEditing(c); setShowForm(true); }}>Edit</Button>
+                      )}
+                      {canDelete && (
+                        <Button variant="destructive" size="sm" onClick={() => { if (confirm("Delete customer?")) remove.mutate(c.customerId); }}>Delete</Button>
+                      )}
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>

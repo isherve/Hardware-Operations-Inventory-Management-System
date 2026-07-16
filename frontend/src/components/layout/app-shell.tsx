@@ -12,6 +12,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 import { useI18n } from "@/hooks/useI18n";
+import { can } from "@/lib/permissions";
 import { Button } from "@/components/ui/button";
 import { AppSettings } from "@/components/app-settings";
 
@@ -19,24 +20,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const { pathname } = useLocation();
   const { user, logout } = useAuth();
   const { t } = useI18n();
-  const isAdmin = user?.userType === "ADMIN";
 
   const links = [
-    { href: "/dashboard", label: t("nav.dashboard"), icon: LayoutDashboard },
-    { href: "/inventory", label: t("nav.inventory"), icon: Package },
-    ...(isAdmin
-      ? [
-          { href: "/sales", label: t("nav.sales"), icon: ShoppingCart },
-          { href: "/customers", label: t("nav.customers"), icon: Users },
-          { href: "/employees", label: t("nav.employees"), icon: UserCog },
-        ]
-      : [
-          { href: "/sales/new", label: t("nav.newSale"), icon: ShoppingCart },
-          { href: "/sales", label: t("nav.salesHistory"), icon: ShoppingCart },
-          { href: "/customers", label: t("nav.customers"), icon: Users },
-        ]),
-    { href: "/reports", label: t("nav.reports"), icon: BarChart3 },
-  ];
+    { href: "/dashboard", label: t("nav.dashboard"), icon: LayoutDashboard, show: can(user, "viewDashboard") },
+    { href: "/inventory", label: t("nav.inventory"), icon: Package, show: can(user, "viewInventory") },
+    { href: "/sales/new", label: t("nav.newSale"), icon: ShoppingCart, show: can(user, "createSale") },
+    { href: "/sales", label: t("nav.sales"), icon: ShoppingCart, show: can(user, "viewSales") },
+    { href: "/customers", label: t("nav.customers"), icon: Users, show: can(user, "viewCustomers") },
+    { href: "/employees", label: t("nav.employees"), icon: UserCog, show: can(user, "manageEmployees") },
+    { href: "/reports", label: t("nav.reports"), icon: BarChart3, show: can(user, "viewReports") },
+  ].filter((l) => l.show);
 
   return (
     <div className="flex min-h-screen bg-slate-50 dark:bg-slate-950">
@@ -52,7 +45,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               to={href}
               className={cn(
                 "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
-                pathname === href || pathname.startsWith(href + "/")
+                pathname === href || (href !== "/sales" && pathname.startsWith(href + "/")) || (href === "/sales" && pathname === "/sales")
                   ? "bg-orange-50 text-orange-700 dark:bg-orange-950 dark:text-orange-300"
                   : "text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
               )}

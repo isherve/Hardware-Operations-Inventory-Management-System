@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { api, ApiClientError } from "@/lib/api";
 import type { Employee } from "@/types";
 import { useAuth } from "@/hooks/useAuth";
+import { can } from "@/lib/permissions";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,7 +20,7 @@ export default function EmployeesPage() {
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState<Employee | null>(null);
   const qc = useQueryClient();
-  const isAdmin = user?.userType === "ADMIN";
+  const isAdmin = can(user, "manageEmployees");
 
   const { data: employees = [], isLoading } = useQuery({
     queryKey: ["employees"],

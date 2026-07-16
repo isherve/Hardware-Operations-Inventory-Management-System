@@ -41,10 +41,33 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/api-docs/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                        // Employees — Admin only
                         .requestMatchers("/api/employees/**").hasRole("ADMIN")
+
+                        // Products — Admin write; all authenticated read
                         .requestMatchers(HttpMethod.POST, "/api/products/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/products/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/products/**").hasRole("ADMIN")
+
+                        // Inventory adjust — Admin + Manager
+                        .requestMatchers(HttpMethod.PUT, "/api/inventory/**").hasAnyRole("ADMIN", "MANAGER")
+
+                        // Sales create — floor staff + manager
+                        .requestMatchers(HttpMethod.POST, "/api/sales/*/refund").hasAnyRole("ADMIN", "MANAGER")
+                        .requestMatchers(HttpMethod.POST, "/api/sales").hasAnyRole("MANAGER", "CASHIER", "SALES_ASSISTANT")
+                        .requestMatchers(HttpMethod.GET, "/api/sales/**").hasAnyRole("ADMIN", "MANAGER", "CASHIER", "SALES_ASSISTANT")
+
+                        // Customers — Drivers read-only; delete Admin/Manager
+                        .requestMatchers(HttpMethod.DELETE, "/api/customers/**").hasAnyRole("ADMIN", "MANAGER")
+                        .requestMatchers(HttpMethod.POST, "/api/customers/**").hasAnyRole("ADMIN", "MANAGER", "CASHIER", "SALES_ASSISTANT")
+                        .requestMatchers(HttpMethod.PUT, "/api/customers/**").hasAnyRole("ADMIN", "MANAGER", "CASHIER", "SALES_ASSISTANT")
+
+                        // Reports — Admin + Manager (dashboard allowed for all authenticated below)
+                        .requestMatchers("/api/reports/daily", "/api/reports/monthly",
+                                "/api/reports/inventory", "/api/reports/transactions",
+                                "/api/reports/*/export/**").hasAnyRole("ADMIN", "MANAGER")
+
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

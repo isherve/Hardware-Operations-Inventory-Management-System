@@ -1,6 +1,7 @@
 package com.bettina.hardware.inventory;
 
 import com.bettina.hardware.common.exception.ResourceNotFoundException;
+import com.bettina.hardware.config.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +13,7 @@ import java.util.List;
 public class InventoryService {
 
     private final InventoryRepository inventoryRepository;
+    private final SecurityUtils securityUtils;
 
     public List<InventoryResponse> findAll() {
         return inventoryRepository.findAllWithProduct().stream().map(this::toResponse).toList();
@@ -23,6 +25,7 @@ public class InventoryService {
 
     @Transactional
     public InventoryResponse update(Long productId, InventoryUpdateRequest request) {
+        securityUtils.requireAnyRole("ADMIN", "MANAGER");
         Inventory inventory = inventoryRepository.findByProductProductId(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Inventory for product", productId));
         inventory.setQuantityInStock(request.getQuantityInStock());

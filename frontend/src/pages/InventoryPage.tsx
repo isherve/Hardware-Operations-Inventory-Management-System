@@ -5,6 +5,7 @@ import { api, ApiClientError } from "@/lib/api";
 import { formatRwf } from "@/lib/utils";
 import type { InventoryItem, Product } from "@/types";
 import { useAuth } from "@/hooks/useAuth";
+import { can } from "@/lib/permissions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,7 +14,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function InventoryPage() {
   const { user } = useAuth();
-  const isAdmin = user?.userType === "ADMIN";
+  const canManageProducts = can(user, "manageProducts");
+  const canAdjust = can(user, "adjustInventory");
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
   const [showForm, setShowForm] = useState(false);
@@ -48,14 +50,14 @@ export default function InventoryPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <h1 className="text-2xl font-bold">Inventory</h1>
-        {isAdmin && (
+        {canManageProducts && (
           <Button onClick={() => setShowForm(!showForm)}>
             {showForm ? "Cancel" : "New Product"}
           </Button>
         )}
       </div>
 
-      {showForm && isAdmin && <NewProductForm onSuccess={() => { setShowForm(false); qc.invalidateQueries({ queryKey: ["inventory"] }); qc.invalidateQueries({ queryKey: ["products"] }); }} />}
+      {showForm && canManageProducts && <NewProductForm onSuccess={() => { setShowForm(false); qc.invalidateQueries({ queryKey: ["inventory"] }); qc.invalidateQueries({ queryKey: ["products"] }); }} />}
 
       <div className="flex flex-wrap gap-3">
         <Input placeholder="Search products..." value={search} onChange={(e) => setSearch(e.target.value)} className="max-w-xs" />
@@ -77,7 +79,7 @@ export default function InventoryPage() {
                   <th className="p-3">In Stock</th>
                   <th className="p-3">Reorder</th>
                   <th className="p-3">Status</th>
-                  {isAdmin && <th className="p-3">Actions</th>}
+                  {canAdjust && <th className="p-3">Actions</th>}
                 </tr>
               </thead>
               <tbody>
@@ -93,7 +95,7 @@ export default function InventoryPage() {
                     <td className="p-3">
                       {item.lowStock ? <Badge variant="destructive">Low Stock</Badge> : <Badge variant="secondary">OK</Badge>}
                     </td>
-                    {isAdmin && (
+                    {canAdjust && (
                       <td className="p-3">
                         <StockAdjust item={item} onSave={(qty, reorder) => updateStock.mutate({ productId: item.productId, qty, reorder })} />
                       </td>

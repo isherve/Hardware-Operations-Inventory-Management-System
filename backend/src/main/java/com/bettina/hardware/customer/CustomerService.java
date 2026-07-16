@@ -1,6 +1,7 @@
 package com.bettina.hardware.customer;
 
 import com.bettina.hardware.common.exception.ResourceNotFoundException;
+import com.bettina.hardware.config.SecurityUtils;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import java.util.List;
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
+    private final SecurityUtils securityUtils;
 
     public List<CustomerResponse> findAll(String search) {
         return customerRepository.findAll((root, query, cb) -> {
@@ -37,6 +39,7 @@ public class CustomerService {
 
     @Transactional
     public CustomerResponse create(CustomerRequest request) {
+        securityUtils.requireAnyRole("ADMIN", "MANAGER", "CASHIER", "SALES_ASSISTANT");
         Customer customer = Customer.builder()
                 .customerName(request.getCustomerName())
                 .phoneNumber(request.getPhoneNumber())
@@ -49,6 +52,7 @@ public class CustomerService {
 
     @Transactional
     public CustomerResponse update(Long id, CustomerRequest request) {
+        securityUtils.requireAnyRole("ADMIN", "MANAGER", "CASHIER", "SALES_ASSISTANT");
         Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Customer", id));
         customer.setCustomerName(request.getCustomerName());
@@ -60,6 +64,7 @@ public class CustomerService {
 
     @Transactional
     public void delete(Long id) {
+        securityUtils.requireAnyRole("ADMIN", "MANAGER");
         if (!customerRepository.existsById(id)) {
             throw new ResourceNotFoundException("Customer", id);
         }

@@ -4,11 +4,16 @@ import { toast } from "sonner";
 import { api, ApiClientError } from "@/lib/api";
 import { formatDate, formatRwf } from "@/lib/utils";
 import type { Sale } from "@/types";
+import { useAuth } from "@/hooks/useAuth";
+import { can } from "@/lib/permissions";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 
 export default function SalesListPage() {
+  const { user } = useAuth();
+  const canCreate = can(user, "createSale");
+  const canRefund = can(user, "refundSale");
   const qc = useQueryClient();
   const { data: sales = [], isLoading } = useQuery({
     queryKey: ["sales"],
@@ -31,13 +36,15 @@ export default function SalesListPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Sales</h1>
-        <Button asChild><Link to="/sales/new">New Sale</Link></Button>
+        {canCreate && (
+          <Button asChild><Link to="/sales/new">New Sale</Link></Button>
+        )}
       </div>
       <Card>
         <CardContent className="p-0">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b bg-slate-50 text-left text-slate-500">
+              <tr className="border-b bg-slate-50 text-left text-slate-500 dark:bg-slate-900 dark:text-slate-400">
                 <th className="p-3">ID</th>
                 <th className="p-3">Date</th>
                 <th className="p-3">Employee</th>
@@ -59,8 +66,8 @@ export default function SalesListPage() {
                   <td className="p-3">{formatRwf(s.totalAmount)}</td>
                   <td className="p-3">{s.refunded ? <Badge variant="destructive">Refunded</Badge> : <Badge>Completed</Badge>}</td>
                   <td className="p-3 space-x-2">
-                    <Button variant="outline" size="sm" asChild><Link href={`/sales/${s.saleId}`}>Receipt</Link></Button>
-                    {!s.refunded && (
+                    <Button variant="outline" size="sm" asChild><Link to={`/sales/${s.saleId}`}>Receipt</Link></Button>
+                    {canRefund && !s.refunded && (
                       <Button variant="destructive" size="sm" onClick={() => { if (confirm("Refund this sale?")) refund.mutate(s.saleId); }}>
                         Refund
                       </Button>

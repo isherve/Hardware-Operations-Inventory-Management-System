@@ -1,7 +1,6 @@
 package com.bettina.hardware.sales;
 
 import com.bettina.hardware.common.enums.TransactionType;
-import com.bettina.hardware.common.enums.UserType;
 import com.bettina.hardware.common.exception.BusinessException;
 import com.bettina.hardware.common.exception.ResourceNotFoundException;
 import com.bettina.hardware.config.LoyaltyProperties;
@@ -40,21 +39,32 @@ public class SaleService {
     private final LoyaltyProperties loyaltyProperties;
 
     public List<SaleResponse> findAll() {
+        securityUtils.requireAnyRole("ADMIN", "MANAGER", "CASHIER", "SALES_ASSISTANT");
+        if (securityUtils.seesOnlyOwnSales()) {
+            return saleRepository.findByEmployeeIdWithDetails(securityUtils.getCurrentUserId())
+                    .stream().map(this::toResponse).toList();
+        }
         return saleRepository.findAllWithDetails().stream().map(this::toResponse).toList();
     }
 
     public SaleResponse findById(Long id) {
-        return toResponse(saleRepository.findByIdWithDetails(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Sale", id)));
+        securityUtils.requireAnyRole("ADMIN", "MANAGER", "CASHIER", "SALES_ASSISTANT");
+        Sale sale = saleRepository.findByIdWithDetails(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Sale", id));
+        if (securityUtils.seesOnlyOwnSales()
+                && !sale.getEmployee().getEmployeeId().equals(securityUtils.getCurrentUserId())) {
+            throw new BusinessException("You can only view your own sales.");
+        }
+        return toResponse(sale);
     }
 
     @Transactional
     public SaleResponse createSale(CreateSaleRequest request) {
-        Long employeeId = securityUtils.getCurrentUserId();
-        if (securityUtils.getCurrentUser().getUserType() == UserType.ADMIN) {
-            throw new BusinessException("Admins cannot record sales. Use an employee account.");
+        if (!securityUtils.canCreateSales()) {
+            throw new BusinessException("Your role cannot record sales.");
         }
 
+        Long employeeId = securityUtils.getCurrentUserId();
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee", employeeId));
 
@@ -129,6 +139,10 @@ public class SaleService {
 
     @Transactional
     public SaleResponse refund(Long saleId) {
+        if (!securityUtils.canRefundSales()) {
+            throw new BusinessException("Only Admin or Manager can refund sales.");
+        }
+
         Sale sale = saleRepository.findByIdWithDetails(saleId)
                 .orElseThrow(() -> new ResourceNotFoundException("Sale", saleId));
 

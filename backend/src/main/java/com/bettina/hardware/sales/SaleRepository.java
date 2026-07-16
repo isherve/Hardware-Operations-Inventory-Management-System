@@ -33,4 +33,7 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
 
     @Query("SELECT DISTINCT s FROM Sale s LEFT JOIN FETCH s.lineItems li LEFT JOIN FETCH li.product WHERE s.saleDate BETWEEN :from AND :to")
     List<Sale> findByDateRangeWithLines(@Param("from") LocalDate from, @Param("to") LocalDate to);
+
+    @Query("SELECT s FROM Sale s JOIN FETCH s.employee LEFT JOIN FETCH s.customer LEFT JOIN FETCH s.lineItems li LEFT JOIN FETCH li.product WHERE s.employee.employeeId = :employeeId ORDER BY s.saleDate DESC, s.saleId DESC")
+    List<Sale> findByEmployeeIdWithDetails(@Param("employeeId") Long employeeId);
 }
