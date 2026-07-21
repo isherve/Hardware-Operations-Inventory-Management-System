@@ -13,6 +13,7 @@ import SaleReceiptPage from "@/pages/SaleReceiptPage";
 import CustomersPage from "@/pages/CustomersPage";
 import EmployeesPage from "@/pages/EmployeesPage";
 import ReportsPage from "@/pages/ReportsPage";
+import AuditPage from "@/pages/AuditPage";
 
 export default function App() {
   return (
@@ -69,6 +70,14 @@ export default function App() {
           element={
             <RequirePermission permission="viewReports">
               <ReportsPage />
+            </RequirePermission>
+          }
+        />
+        <Route
+          path="/audit"
+          element={
+            <RequirePermission permission="viewAudit">
+              <AuditPage />
             </RequirePermission>
           }
         />

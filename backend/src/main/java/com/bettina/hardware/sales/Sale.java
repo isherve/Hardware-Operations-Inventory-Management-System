@@ -1,6 +1,7 @@
 package com.bettina.hardware.sales;
 
 import com.bettina.hardware.common.entity.AuditableEntity;
+import com.bettina.hardware.common.enums.PaymentMethod;
 import com.bettina.hardware.customer.Customer;
 import com.bettina.hardware.employee.Employee;
 import jakarta.persistence.*;
@@ -41,6 +42,11 @@ public class Sale extends AuditableEntity {
 
     @Column(nullable = false)
     private boolean refunded;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "payment_method", nullable = false)
+    @Builder.Default
+    private PaymentMethod paymentMethod = PaymentMethod.CASH;
 
     @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default

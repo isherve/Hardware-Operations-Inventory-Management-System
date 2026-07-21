@@ -126,10 +126,16 @@ docker-compose.yml
 ## Key Features
 
 - **Transactional sales** — stock decrement, financial record, loyalty points in one DB transaction
+- **Payment methods** — Cash, Mobile Money (MoMo), Bank transfer on each sale
+- **SKU codes** — product identifiers for faster lookup
+- **Stock-in** — record supplier deliveries (Admin/Manager)
+- **Audit log** — who created sales, refunds, stock changes, customer edits
+- **Soft-delete customers** — safe remove without breaking history
+- **Role permissions** — Admin, Manager, Cashier, Sales Assistant, Driver
 - **Refunds** — restore inventory and create REFUND financial records
 - **Low-stock alerts** — products where `quantity_in_stock <= reorder_level`
-- **RBAC** — Admin vs Employee roles enforced server-side
 - **Reports** — daily/monthly sales, inventory valuation, transaction ledger with CSV/PDF export
+- **CI** — GitHub Actions builds and tests on every push (free)
 - **Currency** — RWF (stored as DECIMAL, displayed without decimals)
 
 ## Loyalty Points

@@ -22,6 +22,7 @@ export default function NewSalePage() {
   const navigate = useNavigate();
   const qc = useQueryClient();
   const [customerId, setCustomerId] = useState<string>("");
+  const [paymentMethod, setPaymentMethod] = useState("CASH");
   const [lines, setLines] = useState<LineItem[]>([]);
   const [selectedProduct, setSelectedProduct] = useState("");
   const [qty, setQty] = useState("1");
@@ -65,6 +66,7 @@ export default function NewSalePage() {
   const createSale = useMutation({
     mutationFn: () => api.post<Sale>("/sales", {
       customerId: customerId ? parseInt(customerId) : null,
+      paymentMethod,
       lines: lines.map((l) => ({ productId: l.productId, quantity: l.quantity })),
     }),
     onSuccess: (sale) => {
@@ -82,11 +84,19 @@ export default function NewSalePage() {
 
       <Card>
         <CardHeader><CardTitle>Customer (optional)</CardTitle></CardHeader>
-        <CardContent>
-          <select value={customerId} onChange={(e) => setCustomerId(e.target.value)} className="h-10 w-full rounded-md border border-slate-300 px-3 text-sm">
+        <CardContent className="space-y-4">
+          <select value={customerId} onChange={(e) => setCustomerId(e.target.value)} className="h-10 w-full rounded-md border border-slate-300 px-3 text-sm dark:border-slate-700 dark:bg-slate-950">
             <option value="">Walk-in customer</option>
             {customers.map((c) => <option key={c.customerId} value={c.customerId}>{c.customerName}</option>)}
           </select>
+          <div>
+            <Label>Payment method</Label>
+            <select value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)} className="mt-1 h-10 w-full rounded-md border border-slate-300 px-3 text-sm dark:border-slate-700 dark:bg-slate-950">
+              <option value="CASH">Cash</option>
+              <option value="MOMO">Mobile Money (MoMo)</option>
+              <option value="BANK">Bank transfer</option>
+            </select>
+          </div>
           <Button variant="link" className="mt-2 px-0" asChild>
             <Link to="/customers">Manage customers</Link>
           </Button>
@@ -103,7 +113,7 @@ export default function NewSalePage() {
                 <option value="">Select product</option>
                 {products.map((p) => (
                   <option key={p.productId} value={p.productId}>
-                    {p.productName} — {formatRwf(p.unitPrice)} (stock: {p.quantityInStock ?? 0})
+                    {p.sku ? `[${p.sku}] ` : ""}{p.productName} — {formatRwf(p.unitPrice)} (stock: {p.quantityInStock ?? 0})
                   </option>
                 ))}
               </select>

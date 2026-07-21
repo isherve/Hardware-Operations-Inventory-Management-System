@@ -29,4 +29,9 @@ public class InventoryController {
     public InventoryResponse update(@PathVariable Long productId, @Valid @RequestBody InventoryUpdateRequest request) {
         return inventoryService.update(productId, request);
     }
+
+    @PostMapping("/stock-in")
+    public InventoryResponse stockIn(@Valid @RequestBody StockInRequest request) {
+        return inventoryService.stockIn(request);
+    }
 }

@@ -12,6 +12,7 @@ public class ProductResponse {
     private String productName;
     private String description;
     private String category;
+    private String sku;
     private BigDecimal unitPrice;
     private Integer quantityInStock;
     private Integer reorderLevel;

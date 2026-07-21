@@ -15,6 +15,7 @@ export interface Product {
   productName: string;
   description?: string;
   category: string;
+  sku?: string;
   unitPrice: number;
   quantityInStock?: number;
   reorderLevel?: number;
@@ -25,6 +26,7 @@ export interface InventoryItem {
   inventoryId: number;
   productId: number;
   productName: string;
+  sku?: string;
   category: string;
   unitPrice: number;
   quantityInStock: number;
@@ -67,7 +69,19 @@ export interface Sale {
   saleDate: string;
   totalAmount: number;
   refunded: boolean;
+  paymentMethod?: string;
   lines: SaleLine[];
+}
+
+export interface AuditLogEntry {
+  auditId: number;
+  actorUsername?: string;
+  actorRole?: string;
+  action: string;
+  entityType?: string;
+  entityId?: number;
+  details?: string;
+  createdAt: string;
 }
 
 export interface DashboardReport {

@@ -14,7 +14,9 @@ export type Permission =
   | "manageCustomers"
   | "deleteCustomers"
   | "manageEmployees"
-  | "viewReports";
+  | "viewReports"
+  | "viewAudit"
+  | "stockIn";
 
 const ROLE_PERMISSIONS: Record<AppRole, Permission[]> = {
   ADMIN: [
@@ -29,6 +31,8 @@ const ROLE_PERMISSIONS: Record<AppRole, Permission[]> = {
     "deleteCustomers",
     "manageEmployees",
     "viewReports",
+    "viewAudit",
+    "stockIn",
   ],
   MANAGER: [
     "viewDashboard",
@@ -41,6 +45,8 @@ const ROLE_PERMISSIONS: Record<AppRole, Permission[]> = {
     "manageCustomers",
     "deleteCustomers",
     "viewReports",
+    "viewAudit",
+    "stockIn",
   ],
   CASHIER: [
     "viewDashboard",

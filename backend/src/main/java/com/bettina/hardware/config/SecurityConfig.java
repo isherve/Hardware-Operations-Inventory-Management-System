@@ -50,6 +50,12 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/api/products/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/products/**").hasRole("ADMIN")
 
+                        // Audit — Admin + Manager
+                        .requestMatchers("/api/audit/**").hasAnyRole("ADMIN", "MANAGER")
+
+                        // Inventory stock-in — Admin + Manager
+                        .requestMatchers(HttpMethod.POST, "/api/inventory/stock-in").hasAnyRole("ADMIN", "MANAGER")
+
                         // Inventory adjust — Admin + Manager
                         .requestMatchers(HttpMethod.PUT, "/api/inventory/**").hasAnyRole("ADMIN", "MANAGER")
 

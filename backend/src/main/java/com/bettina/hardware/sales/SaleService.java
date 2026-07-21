@@ -1,5 +1,8 @@
 package com.bettina.hardware.sales;
 
+import com.bettina.hardware.audit.AuditService;
+import com.bettina.hardware.common.enums.PaymentMethod;
+import com.bettina.hardware.common.enums.StockMovementType;
 import com.bettina.hardware.common.enums.TransactionType;
 import com.bettina.hardware.common.exception.BusinessException;
 import com.bettina.hardware.common.exception.ResourceNotFoundException;
@@ -13,6 +16,8 @@ import com.bettina.hardware.finance.FinancialRecord;
 import com.bettina.hardware.finance.FinancialRecordRepository;
 import com.bettina.hardware.inventory.Inventory;
 import com.bettina.hardware.inventory.InventoryRepository;
+import com.bettina.hardware.inventory.StockMovement;
+import com.bettina.hardware.inventory.StockMovementRepository;
 import com.bettina.hardware.product.Product;
 import com.bettina.hardware.product.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +40,8 @@ public class SaleService {
     private final EmployeeRepository employeeRepository;
     private final CustomerRepository customerRepository;
     private final FinancialRecordRepository financialRecordRepository;
+    private final StockMovementRepository stockMovementRepository;
+    private final AuditService auditService;
     private final SecurityUtils securityUtils;
     private final LoyaltyProperties loyaltyProperties;
 
@@ -74,13 +81,21 @@ public class SaleService {
                     .orElseThrow(() -> new ResourceNotFoundException("Customer", request.getCustomerId()));
         }
 
+        if (customer != null && customer.getDeletedAt() != null) {
+            throw new BusinessException("Cannot sell to a deleted customer.");
+        }
+
         LocalDate saleDate = request.getSaleDate() != null ? request.getSaleDate() : LocalDate.now();
+        PaymentMethod paymentMethod = request.getPaymentMethod() != null
+                ? request.getPaymentMethod()
+                : PaymentMethod.CASH;
         Sale sale = Sale.builder()
                 .employee(employee)
                 .customer(customer)
                 .saleDate(saleDate)
                 .totalAmount(BigDecimal.ZERO)
                 .refunded(false)
+                .paymentMethod(paymentMethod)
                 .build();
 
         BigDecimal total = BigDecimal.ZERO;
@@ -104,6 +119,14 @@ public class SaleService {
 
             inventory.setQuantityInStock(inventory.getQuantityInStock() - line.getQuantity());
             inventoryRepository.save(inventory);
+
+            stockMovementRepository.save(StockMovement.builder()
+                    .product(product)
+                    .quantity(-line.getQuantity())
+                    .movementType(StockMovementType.SALE)
+                    .notes("Sale line")
+                    .performedBy(securityUtils.getCurrentUser().getUsername())
+                    .build());
 
             SaleProduct saleProduct = SaleProduct.builder()
                     .id(new SaleProduct.SaleProductId(null, product.getProductId()))
@@ -134,6 +157,9 @@ public class SaleService {
             customerRepository.save(customer);
         }
 
+        auditService.log("SALE_CREATED", "Sale", sale.getSaleId(),
+                "Total " + sale.getTotalAmount() + " via " + sale.getPaymentMethod());
+
         return toResponse(saleRepository.findByIdWithDetails(sale.getSaleId()).orElse(sale));
     }
 
@@ -155,6 +181,14 @@ public class SaleService {
                     .orElseThrow(() -> new BusinessException("Inventory not found for product"));
             inventory.setQuantityInStock(inventory.getQuantityInStock() + line.getQuantity());
             inventoryRepository.save(inventory);
+
+            stockMovementRepository.save(StockMovement.builder()
+                    .product(line.getProduct())
+                    .quantity(line.getQuantity())
+                    .movementType(StockMovementType.REFUND)
+                    .notes("Refund sale #" + saleId)
+                    .performedBy(securityUtils.getCurrentUser().getUsername())
+                    .build());
         }
 
         sale.setRefunded(true);
@@ -175,6 +209,8 @@ public class SaleService {
             customer.setLoyaltyPoints(Math.max(0, customer.getLoyaltyPoints() - points));
             customerRepository.save(customer);
         }
+
+        auditService.log("SALE_REFUNDED", "Sale", saleId, "Refunded " + sale.getTotalAmount());
 
         return toResponse(sale);
     }
@@ -199,6 +235,7 @@ public class SaleService {
                 .saleDate(sale.getSaleDate())
                 .totalAmount(sale.getTotalAmount())
                 .refunded(sale.isRefunded())
+                .paymentMethod(sale.getPaymentMethod() != null ? sale.getPaymentMethod().name() : PaymentMethod.CASH.name())
                 .lines(lines)
                 .build();
     }

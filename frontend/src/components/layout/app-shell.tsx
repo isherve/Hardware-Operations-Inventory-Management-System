@@ -8,6 +8,7 @@ import {
   BarChart3,
   LogOut,
   KeyRound,
+  ClipboardList,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
@@ -15,6 +16,7 @@ import { useI18n } from "@/hooks/useI18n";
 import { can } from "@/lib/permissions";
 import { Button } from "@/components/ui/button";
 import { AppSettings } from "@/components/app-settings";
+import { ApiStatusBanner } from "@/components/ApiStatusBanner";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const { pathname } = useLocation();
@@ -29,6 +31,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     { href: "/customers", label: t("nav.customers"), icon: Users, show: can(user, "viewCustomers") },
     { href: "/employees", label: t("nav.employees"), icon: UserCog, show: can(user, "manageEmployees") },
     { href: "/reports", label: t("nav.reports"), icon: BarChart3, show: can(user, "viewReports") },
+    { href: "/audit", label: "Audit", icon: ClipboardList, show: can(user, "viewAudit") },
   ].filter((l) => l.show);
 
   return (
@@ -73,7 +76,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </div>
         </div>
       </aside>
-      <main className="flex-1 overflow-auto p-8">{children}</main>
+      <div className="flex flex-1 flex-col overflow-auto">
+        <ApiStatusBanner />
+        <main className="flex-1 p-8">{children}</main>
+      </div>
     </div>
   );
 }

@@ -14,6 +14,7 @@ public class ProductRequest {
     private String description;
     @NotBlank
     private String category;
+    private String sku;
     @NotNull
     @DecimalMin("0.01")
     private BigDecimal unitPrice;

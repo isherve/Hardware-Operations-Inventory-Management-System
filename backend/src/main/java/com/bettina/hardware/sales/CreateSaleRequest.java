@@ -11,6 +11,7 @@ import java.util.List;
 public class CreateSaleRequest {
     private Long customerId;
     private LocalDate saleDate;
+    private com.bettina.hardware.common.enums.PaymentMethod paymentMethod;
     @NotEmpty
     @Valid
     private List<SaleLineRequest> lines;

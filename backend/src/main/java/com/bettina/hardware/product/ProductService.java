@@ -1,5 +1,7 @@
 package com.bettina.hardware.product;
 
+import com.bettina.hardware.audit.AuditService;
+import com.bettina.hardware.common.exception.BusinessException;
 import com.bettina.hardware.common.exception.ResourceNotFoundException;
 import com.bettina.hardware.inventory.Inventory;
 import com.bettina.hardware.inventory.InventoryRepository;
@@ -18,6 +20,7 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final InventoryRepository inventoryRepository;
+    private final AuditService auditService;
 
     public List<ProductResponse> findAll(String search, String category) {
         return productRepository.findAll((root, query, cb) -> {
@@ -26,7 +29,8 @@ public class ProductService {
                 String pattern = "%" + search.toLowerCase() + "%";
                 predicates.add(cb.or(
                         cb.like(cb.lower(root.get("productName")), pattern),
-                        cb.like(cb.lower(root.get("description")), pattern)
+                        cb.like(cb.lower(root.get("description")), pattern),
+                        cb.like(cb.lower(root.get("sku")), pattern)
                 ));
             }
             if (StringUtils.hasText(category)) {
@@ -44,11 +48,15 @@ public class ProductService {
 
     @Transactional
     public ProductResponse create(ProductRequest request) {
+        String sku = normalizeSku(request.getSku());
+        ensureSkuUnique(sku, null);
+
         Product product = Product.builder()
                 .productName(request.getProductName())
                 .description(request.getDescription())
                 .category(request.getCategory())
                 .unitPrice(request.getUnitPrice())
+                .sku(sku)
                 .build();
         product = productRepository.save(product);
 
@@ -61,6 +69,8 @@ public class ProductService {
                 .build();
         inventoryRepository.save(inventory);
         product.setInventory(inventory);
+
+        auditService.log("PRODUCT_CREATED", "Product", product.getProductId(), product.getProductName());
         return toResponse(product);
     }
 
@@ -68,11 +78,16 @@ public class ProductService {
     public ProductResponse update(Long id, ProductRequest request) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product", id));
+        String sku = normalizeSku(request.getSku());
+        ensureSkuUnique(sku, id);
+
         product.setProductName(request.getProductName());
         product.setDescription(request.getDescription());
         product.setCategory(request.getCategory());
         product.setUnitPrice(request.getUnitPrice());
+        product.setSku(sku);
         productRepository.save(product);
+        auditService.log("PRODUCT_UPDATED", "Product", id, product.getProductName());
         return toResponse(product);
     }
 
@@ -82,6 +97,27 @@ public class ProductService {
             throw new ResourceNotFoundException("Product", id);
         }
         productRepository.deleteById(id);
+        auditService.log("PRODUCT_DELETED", "Product", id, null);
+    }
+
+    private String normalizeSku(String sku) {
+        if (!StringUtils.hasText(sku)) {
+            return null;
+        }
+        return sku.trim().toUpperCase();
+    }
+
+    private void ensureSkuUnique(String sku, Long excludeId) {
+        if (sku == null) {
+            return;
+        }
+        productRepository.findAll().stream()
+                .filter(p -> sku.equalsIgnoreCase(p.getSku()))
+                .filter(p -> excludeId == null || !p.getProductId().equals(excludeId))
+                .findFirst()
+                .ifPresent(p -> {
+                    throw new BusinessException("SKU already in use: " + sku);
+                });
     }
 
     private ProductResponse toResponse(Product product) {
@@ -91,6 +127,7 @@ public class ProductService {
                 .productName(product.getProductName())
                 .description(product.getDescription())
                 .category(product.getCategory())
+                .sku(product.getSku())
                 .unitPrice(product.getUnitPrice())
                 .quantityInStock(inv != null ? inv.getQuantityInStock() : null)
                 .reorderLevel(inv != null ? inv.getReorderLevel() : null)

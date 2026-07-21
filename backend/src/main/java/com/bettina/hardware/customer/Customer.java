@@ -30,4 +30,7 @@ public class Customer extends AuditableEntity {
 
     @Column(name = "loyalty_points", nullable = false)
     private int loyaltyPoints;
+
+    @Column(name = "deleted_at")
+    private java.time.LocalDateTime deletedAt;
 }

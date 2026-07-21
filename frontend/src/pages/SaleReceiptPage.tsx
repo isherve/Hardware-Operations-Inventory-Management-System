@@ -33,9 +33,10 @@ export default function SaleReceiptPage() {
             <span>Sale #{sale.saleId}</span>
             <span>{formatDate(sale.saleDate)}</span>
           </div>
-          <div className="text-sm text-slate-600">
+          <div className="text-sm text-slate-600 dark:text-slate-300">
             <p>Cashier: {sale.employeeName}</p>
             <p>Customer: {sale.customerName || "Walk-in"}</p>
+            <p>Payment: {sale.paymentMethod || "CASH"}</p>
             {sale.refunded && <Badge variant="destructive">REFUNDED</Badge>}
           </div>
           <table className="w-full text-sm">

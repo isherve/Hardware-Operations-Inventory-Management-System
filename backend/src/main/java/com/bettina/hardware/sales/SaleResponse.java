@@ -18,5 +18,6 @@ public class SaleResponse {
     private LocalDate saleDate;
     private BigDecimal totalAmount;
     private boolean refunded;
+    private String paymentMethod;
     private List<SaleLineResponse> lines;
 }
