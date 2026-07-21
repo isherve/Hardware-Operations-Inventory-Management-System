@@ -1,4 +1,4 @@
--- Bettina Hardware - Initial Schema
+-- Built In Hardware - Initial Schema
 -- V1: Create all tables per domain model
 
 CREATE TABLE app_admin (

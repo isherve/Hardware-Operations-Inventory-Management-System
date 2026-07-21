@@ -1,10 +1,10 @@
-spring:
+﻿spring:
   application:
-    name: bettina-hardware
+    name: builtin-hardware
   datasource:
-    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:bettina_hardware}
-    username: ${POSTGRES_USER:bettina}
-    password: ${POSTGRES_PASSWORD:bettina_secret}
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:builtin_hardware}
+    username: ${POSTGRES_USER:builtin}
+    password: ${POSTGRES_PASSWORD:builtin_secret}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -24,7 +24,7 @@ server:
   servlet:
     context-path: /
 
-bettina:
+builtin:
   jwt:
     secret: ${JWT_SECRET:change-me-to-a-long-random-secret-at-least-256-bits-for-production}
     expiration-ms: ${JWT_EXPIRATION_MS:86400000}

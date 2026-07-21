@@ -1,6 +1,6 @@
-export const en = {
+﻿export const en = {
   app: {
-    name: "Bettina Hardware",
+    name: "Built In Hardware",
     tagline: "Operations & Inventory Management",
     location: "Kigali, Rwanda",
   },

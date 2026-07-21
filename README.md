@@ -1,6 +1,6 @@
-# Bettina Hardware — Operations & Inventory Management System
+﻿# Built In Hardware — Operations & Inventory Management System
 
-Production-ready hardware store management platform for **Bettina Hardware**, Kigali, Rwanda. Replaces manual ledgers with automated inventory, sales, customer, employee, financial, and reporting workflows.
+Production-ready hardware store management platform for **Built In Hardware**, Kigali, Rwanda. Replaces manual ledgers with automated inventory, sales, customer, employee, financial, and reporting workflows.
 
 ## Tech Stack
 
@@ -38,7 +38,7 @@ docker-compose up -d
 
 **Option B — Local PostgreSQL / pgAdmin 4:**
 
-Create database `bettina_hardware` with user `bettina` / password `bettina_secret`.
+Create database `builtin_hardware` with user `builtin` / password `builtin_secret`.
 
 ### 2. Environment
 
@@ -108,7 +108,7 @@ See [CREDENTIALS.md](CREDENTIALS.md) for the full list.
 
 | Role | Username | Password |
 |------|----------|----------|
-| Admin | `admin` | `Admin@Bettina2024` |
+| Admin | `admin` | `Admin@BuiltIn2024` |
 | Manager | `manager1` | `Manager@2024` |
 | Cashier | `cashier1` | `Cashier@2024` |
 | Sales Assistant | `sales1` | `Sales@2024` |
@@ -147,20 +147,20 @@ Configurable via `LOYALTY_POINTS_PER_1000_RWF` (default: **1 point per 1,000 RWF
 **Backup:**
 
 ```bash
-pg_dump -h localhost -U bettina -d bettina_hardware -F c -f bettina_backup.dump
+pg_dump -h localhost -U builtin -d builtin_hardware -F c -f builtin_backup.dump
 ```
 
 **Restore:**
 
 ```bash
-pg_restore -h localhost -U bettina -d bettina_hardware --clean --if-exists bettina_backup.dump
+pg_restore -h localhost -U builtin -d builtin_hardware --clean --if-exists builtin_backup.dump
 ```
 
 For plain SQL backup:
 
 ```bash
-pg_dump -h localhost -U bettina bettina_hardware > bettina_backup.sql
-psql -h localhost -U bettina -d bettina_hardware < bettina_backup.sql
+pg_dump -h localhost -U builtin builtin_hardware > builtin_backup.sql
+psql -h localhost -U builtin -d builtin_hardware < builtin_backup.sql
 ```
 
 ## Testing
@@ -207,4 +207,4 @@ See **[DEPLOY.md](DEPLOY.md)** for full instructions.
 
 ## License
 
-Internal use — Bettina Hardware, Kigali, Rwanda.
+Internal use — Built In Hardware, Kigali, Rwanda.

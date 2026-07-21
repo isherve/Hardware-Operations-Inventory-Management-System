@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+﻿import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { formatDate, formatRwf } from "@/lib/utils";
@@ -25,7 +25,7 @@ export default function SaleReceiptPage() {
       </div>
       <Card>
         <CardHeader className="text-center">
-          <CardTitle className="text-orange-700">Bettina Hardware</CardTitle>
+          <CardTitle className="text-orange-700">Built In Hardware</CardTitle>
           <p className="text-sm text-slate-500">Kigali, Rwanda — Sales Receipt</p>
         </CardHeader>
         <CardContent className="space-y-4">

@@ -1,10 +1,10 @@
-# Bettina Hardware — Default Login Credentials
+﻿# Built In Hardware — Default Login Credentials
 
 > **Development / demo only.** Change all passwords before production deployment.
 
 | Role | Username | Password | Notes |
 |------|----------|----------|-------|
-| **Admin** | `admin` | `Admin@Bettina2024` | Full system access |
+| **Admin** | `admin` | `Admin@BuiltIn2024` | Full system access |
 | **Manager** | `manager1` | `Manager@2024` | Sales, inventory, reports |
 | **Manager** | `manager2` | `Manager@2024` | Sales, inventory, reports |
 | **Cashier** | `cashier1` | `Cashier@2024` | Point of sale |

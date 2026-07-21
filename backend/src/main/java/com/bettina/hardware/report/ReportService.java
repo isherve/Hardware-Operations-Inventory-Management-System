@@ -1,4 +1,4 @@
-package com.bettina.hardware.report;
+﻿package com.bettina.hardware.report;
 
 import com.bettina.hardware.common.enums.TransactionType;
 import com.bettina.hardware.finance.FinancialRecord;
@@ -277,7 +277,7 @@ public class ReportService {
     }
 
     private void writeDailyPdf(Document doc, Font title, Font header, Font body, DailyReport report) throws DocumentException {
-        doc.add(new Paragraph("Bettina Hardware - Daily Sales Report", title));
+        doc.add(new Paragraph("Built In Hardware - Daily Sales Report", title));
         doc.add(new Paragraph("Date: " + report.getDate(), body));
         doc.add(new Paragraph("Sales: " + report.getSaleCount() + " | Revenue: RWF " + report.getTotalRevenue().toPlainString(), body));
         doc.add(Chunk.NEWLINE);
@@ -290,7 +290,7 @@ public class ReportService {
     }
 
     private void writeMonthlyPdf(Document doc, Font title, Font header, Font body, MonthlyReport report) throws DocumentException {
-        doc.add(new Paragraph("Bettina Hardware - Monthly Sales Report", title));
+        doc.add(new Paragraph("Built In Hardware - Monthly Sales Report", title));
         doc.add(new Paragraph("Period: " + report.getYear() + "-" + report.getMonth(), body));
         doc.add(new Paragraph("Sales: " + report.getSaleCount() + " | Revenue: RWF " + report.getTotalRevenue().toPlainString(), body));
         doc.add(Chunk.NEWLINE);
@@ -303,7 +303,7 @@ public class ReportService {
     }
 
     private void writeInventoryPdf(Document doc, Font title, Font header, Font body, InventoryReport report) throws DocumentException {
-        doc.add(new Paragraph("Bettina Hardware - Inventory Report", title));
+        doc.add(new Paragraph("Built In Hardware - Inventory Report", title));
         doc.add(new Paragraph("Products: " + report.getTotalProducts() + " | Low stock: " + report.getLowStockCount()
                 + " | Valuation: RWF " + report.getTotalValuation().toPlainString(), body));
         doc.add(Chunk.NEWLINE);
@@ -316,7 +316,7 @@ public class ReportService {
     }
 
     private void writeTransactionsPdf(Document doc, Font title, Font header, Font body, TransactionReport report) throws DocumentException {
-        doc.add(new Paragraph("Bettina Hardware - Transaction Report", title));
+        doc.add(new Paragraph("Built In Hardware - Transaction Report", title));
         doc.add(new Paragraph(report.getFrom() + " to " + report.getTo() + " | Net: RWF " + report.getNetTotal().toPlainString(), body));
         doc.add(Chunk.NEWLINE);
         PdfPTable table = new PdfPTable(4);

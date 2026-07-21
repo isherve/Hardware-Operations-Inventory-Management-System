@@ -2,7 +2,7 @@
 
 ALTER TABLE product ADD COLUMN sku VARCHAR(50);
 
-UPDATE product SET sku = 'BH-' || LPAD(CAST(product_id AS VARCHAR), 4, '0') WHERE sku IS NULL;
+UPDATE product SET sku = 'BI-' || LPAD(CAST(product_id AS VARCHAR), 4, '0') WHERE sku IS NULL;
 
 CREATE INDEX idx_product_sku ON product(sku);
 

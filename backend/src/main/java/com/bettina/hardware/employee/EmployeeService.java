@@ -32,7 +32,7 @@ public class EmployeeService {
         if (employeeRepository.existsByUsername(request.getUsername())) {
             throw new BusinessException("Username already exists");
         }
-        String password = StringUtils.hasText(request.getPassword()) ? request.getPassword() : "Bettina@2024";
+        String password = StringUtils.hasText(request.getPassword()) ? request.getPassword() : "BuiltIn@2024";
         Employee employee = Employee.builder()
                 .employeeName(request.getEmployeeName())
                 .role(request.getRole())

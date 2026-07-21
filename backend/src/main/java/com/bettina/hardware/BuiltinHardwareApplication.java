@@ -4,9 +4,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class BettinaHardwareApplication {
+public class BuiltinHardwareApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(BettinaHardwareApplication.class, args);
+        SpringApplication.run(BuiltinHardwareApplication.class, args);
     }
 }

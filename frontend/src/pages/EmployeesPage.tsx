@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { api, ApiClientError } from "@/lib/api";
@@ -47,8 +47,8 @@ export default function EmployeesPage() {
   });
 
   const resetPassword = useMutation({
-    mutationFn: (id: number) => api.put(`/employees/${id}/reset-password`, { newPassword: "Bettina@2024" }),
-    onSuccess: () => toast.success("Password reset to Bettina@2024"),
+    mutationFn: (id: number) => api.put(`/employees/${id}/reset-password`, { newPassword: "BuiltIn@2024" }),
+    onSuccess: () => toast.success("Password reset to BuiltIn@2024"),
     onError: (e) => toast.error(e instanceof ApiClientError ? e.message : "Failed"),
   });
 

@@ -1,4 +1,4 @@
-package com.bettina.hardware.config;
+﻿package com.bettina.hardware.config;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import java.util.List;
 
 @Configuration
-@ConfigurationProperties(prefix = "bettina.cors")
+@ConfigurationProperties(prefix = "builtin.cors")
 @Getter
 @Setter
 public class CorsProperties {

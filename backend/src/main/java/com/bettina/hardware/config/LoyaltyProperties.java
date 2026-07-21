@@ -1,4 +1,4 @@
-package com.bettina.hardware.config;
+﻿package com.bettina.hardware.config;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -6,7 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConfigurationProperties(prefix = "bettina.loyalty")
+@ConfigurationProperties(prefix = "builtin.loyalty")
 @Getter
 @Setter
 public class LoyaltyProperties {

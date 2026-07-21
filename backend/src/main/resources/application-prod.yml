@@ -1,8 +1,8 @@
-# Production profile — PostgreSQL (Supabase or Render) + cloud port
+﻿# Production profile — PostgreSQL (Supabase or Render) + cloud port
 spring:
   datasource:
-    url: ${SUPABASE_DB_URL:${DATABASE_URL:jdbc:postgresql://localhost:5432/bettina_hardware}}
-    username: ${SUPABASE_DB_USER:${DB_USER:bettina}}
+    url: ${SUPABASE_DB_URL:${DATABASE_URL:jdbc:postgresql://localhost:5432/builtin_hardware}}
+    username: ${SUPABASE_DB_USER:${DB_USER:builtin}}
     password: ${SUPABASE_DB_PASSWORD:${DB_PASSWORD:}}
     driver-class-name: org.postgresql.Driver
   jpa:
@@ -19,7 +19,7 @@ spring:
 server:
   port: ${PORT:${SERVER_PORT:8080}}
 
-bettina:
+builtin:
   jwt:
     secret: ${JWT_SECRET}
     expiration-ms: ${JWT_EXPIRATION_MS:86400000}

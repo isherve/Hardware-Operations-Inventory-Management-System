@@ -1,6 +1,6 @@
-spring:
+﻿spring:
   datasource:
-    url: jdbc:h2:mem:bettina_test;MODE=PostgreSQL;DB_CLOSE_DELAY=-1
+    url: jdbc:h2:mem:builtin_test;MODE=PostgreSQL;DB_CLOSE_DELAY=-1
     driver-class-name: org.h2.Driver
     username: sa
     password:
@@ -13,7 +13,7 @@ spring:
   flyway:
     enabled: true
 
-bettina:
+builtin:
   jwt:
     secret: test-secret-key-for-jwt-signing-minimum-256-bits-long
     expiration-ms: 3600000

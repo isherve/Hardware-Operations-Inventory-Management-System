@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+﻿import { createContext, useContext, useEffect, useState } from "react";
 import { en, type TranslationKey } from "@/locales/en";
 import { fr } from "@/locales/fr";
 
@@ -26,12 +26,12 @@ function getNested(obj: Record<string, unknown>, path: string): string {
 
 export function I18nProvider({ children }: { children: React.ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>(() => {
-    const stored = localStorage.getItem("bettina-lang");
+    const stored = localStorage.getItem("builtin-lang");
     return stored === "fr" ? "fr" : "en";
   });
 
   const setLocale = (next: Locale) => {
-    localStorage.setItem("bettina-lang", next);
+    localStorage.setItem("builtin-lang", next);
     setLocaleState(next);
     document.documentElement.lang = next;
   };

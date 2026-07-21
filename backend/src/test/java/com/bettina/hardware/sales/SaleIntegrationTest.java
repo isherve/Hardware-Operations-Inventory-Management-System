@@ -37,7 +37,7 @@ class SaleIntegrationTest {
     void login() throws Exception {
         LoginRequest login = new LoginRequest();
         login.setUsername("cashier1");
-        login.setPassword("Bettina@2024");
+        login.setPassword("Cashier@2024");
         login.setUserType(UserType.EMPLOYEE);
 
         MvcResult result = mockMvc.perform(post("/api/auth/login")
@@ -83,7 +83,7 @@ class SaleIntegrationTest {
     void employeeEndpoints_forbiddenForAdminProductWrite() throws Exception {
         LoginRequest adminLogin = new LoginRequest();
         adminLogin.setUsername("admin");
-        adminLogin.setPassword("Bettina@2024");
+        adminLogin.setPassword("Admin@BuiltIn2024");
         adminLogin.setUserType(UserType.ADMIN);
 
         MvcResult result = mockMvc.perform(post("/api/auth/login")

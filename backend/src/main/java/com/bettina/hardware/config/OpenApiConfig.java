@@ -1,4 +1,4 @@
-package com.bettina.hardware.config;
+﻿package com.bettina.hardware.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -15,7 +15,7 @@ public class OpenApiConfig {
     public OpenAPI openAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("Bettina Hardware API")
+                        .title("Built In Hardware API")
                         .description("Hardware Store Operations and Inventory Management System")
                         .version("1.0.0"))
                 .addSecurityItem(new SecurityRequirement().addList("Bearer Authentication"))

@@ -1,8 +1,8 @@
-import type { TranslationKey } from "./en";
+﻿import type { TranslationKey } from "./en";
 
 export const fr: TranslationKey = {
   app: {
-    name: "Bettina Hardware",
+    name: "Built In Hardware",
     tagline: "Gestion des opérations et de l'inventaire",
     location: "Kigali, Rwanda",
   },

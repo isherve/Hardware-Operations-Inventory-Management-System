@@ -242,7 +242,7 @@ function NewProductForm({ onSuccess }: { onSuccess: () => void }) {
       <CardContent>
         <form onSubmit={handleSubmit} className="grid gap-4 md:grid-cols-2">
           <div><Label>Product Name</Label><Input value={form.productName} onChange={(e) => setForm({ ...form, productName: e.target.value })} required /></div>
-          <div><Label>SKU / Barcode</Label><Input value={form.sku} onChange={(e) => setForm({ ...form, sku: e.target.value })} placeholder="BH-0017" /></div>
+          <div><Label>SKU / Barcode</Label><Input value={form.sku} onChange={(e) => setForm({ ...form, sku: e.target.value })} placeholder="BI-0017" /></div>
           <div><Label>Category</Label><Input value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} required /></div>
           <div><Label>Unit Price (RWF)</Label><Input type="number" value={form.unitPrice} onChange={(e) => setForm({ ...form, unitPrice: e.target.value })} required min={1} /></div>
           <div><Label>Initial Stock</Label><Input type="number" value={form.initialStock} onChange={(e) => setForm({ ...form, initialStock: e.target.value })} min={0} /></div>

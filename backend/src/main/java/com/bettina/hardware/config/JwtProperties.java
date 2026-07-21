@@ -1,4 +1,4 @@
-package com.bettina.hardware.config;
+﻿package com.bettina.hardware.config;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -6,7 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConfigurationProperties(prefix = "bettina.jwt")
+@ConfigurationProperties(prefix = "builtin.jwt")
 @Getter
 @Setter
 public class JwtProperties {

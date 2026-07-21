@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+﻿import { createContext, useContext, useEffect, useState } from "react";
 
 export type Theme = "light" | "dark";
 
@@ -18,7 +18,7 @@ function applyTheme(theme: Theme) {
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setThemeState] = useState<Theme>(() => {
-    const stored = localStorage.getItem("bettina-theme");
+    const stored = localStorage.getItem("builtin-theme");
     if (stored === "dark" || stored === "light") return stored;
     return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
   });
@@ -28,7 +28,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }, [theme]);
 
   const setTheme = (next: Theme) => {
-    localStorage.setItem("bettina-theme", next);
+    localStorage.setItem("builtin-theme", next);
     setThemeState(next);
   };
 

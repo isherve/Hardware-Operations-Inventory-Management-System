@@ -1,9 +1,9 @@
--- Bettina Hardware - Seed Data
+-- Built In Hardware - Seed Data
 -- Role-specific passwords (see CREDENTIALS.md)
 
--- Admin (password: Admin@Bettina2024)
+-- Admin (password: Admin@BuiltIn2024)
 INSERT INTO app_admin (admin_name, username, password_hash, must_change_password)
-VALUES ('Jean Mukamana', 'admin', '$2a$10$OUEAnK1FO1PaA2Yyc1tXPeTI89VMmCffgCi3d/RcjZucYvCn9kreG', FALSE);
+VALUES ('Jean Mukamana', 'admin', '$2a$10$iiPVgPWzwI1LjHIueI4iF.wdPTBNHg1AzzkNHwtDM78WFCwJ8Ni4y', FALSE);
 
 -- Employees
 INSERT INTO employee (employee_name, role, username, password_hash, status, must_change_password) VALUES

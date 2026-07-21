@@ -1,9 +1,9 @@
-# Bettina Hardware — Render deployment blueprint
+﻿# Built In Hardware — Render deployment blueprint
 # Deploy: https://dashboard.render.com → New → Blueprint → connect GitHub repo
 
 services:
   - type: web
-    name: bettina-hardware-api
+    name: builtin-hardware-api
     runtime: docker
     dockerfilePath: ./backend/Dockerfile
     dockerContext: ./backend
@@ -24,7 +24,7 @@ services:
         sync: false
 
   - type: web
-    name: bettina-hardware-web
+    name: builtin-hardware-web
     runtime: static
     buildCommand: npm install && npm run build
     staticPublishPath: dist

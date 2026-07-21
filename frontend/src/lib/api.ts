@@ -1,4 +1,4 @@
-import type { ApiError, AuthUser } from "@/types";
+﻿import type { ApiError, AuthUser } from "@/types";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
 
@@ -14,22 +14,22 @@ export class ApiClientError extends Error {
 }
 
 function getToken(): string | null {
-  return localStorage.getItem("bettina_token");
+  return localStorage.getItem("builtin_token");
 }
 
 export function setAuth(user: AuthUser) {
-  localStorage.setItem("bettina_token", user.token);
-  localStorage.setItem("bettina_user", JSON.stringify(user));
+  localStorage.setItem("builtin_token", user.token);
+  localStorage.setItem("builtin_user", JSON.stringify(user));
 }
 
 export function getAuth(): AuthUser | null {
-  const raw = localStorage.getItem("bettina_user");
+  const raw = localStorage.getItem("builtin_user");
   return raw ? JSON.parse(raw) : null;
 }
 
 export function clearAuth() {
-  localStorage.removeItem("bettina_token");
-  localStorage.removeItem("bettina_user");
+  localStorage.removeItem("builtin_token");
+  localStorage.removeItem("builtin_user");
 }
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
