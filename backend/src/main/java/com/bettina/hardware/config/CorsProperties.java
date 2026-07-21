@@ -1,4 +1,4 @@
-﻿package com.bettina.hardware.config;
+package com.bettina.hardware.config;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,4 +1,4 @@
-﻿package com.bettina.hardware.report;
+package com.bettina.hardware.report;
 
 import com.bettina.hardware.common.enums.TransactionType;
 import com.bettina.hardware.finance.FinancialRecord;
