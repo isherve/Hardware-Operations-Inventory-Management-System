@@ -83,13 +83,19 @@ public class InventoryService {
     }
 
     private InventoryResponse toResponse(Inventory inv) {
+        Product p = inv.getProduct();
         return InventoryResponse.builder()
                 .inventoryId(inv.getInventoryId())
-                .productId(inv.getProduct().getProductId())
-                .productName(inv.getProduct().getProductName())
-                .sku(inv.getProduct().getSku())
-                .category(inv.getProduct().getCategory())
-                .unitPrice(inv.getProduct().getUnitPrice())
+                .productId(p.getProductId())
+                .productName(p.getProductName())
+                .description(p.getDescription())
+                .sku(p.getSku())
+                .brand(p.getBrand())
+                .unit(p.getUnit() != null ? p.getUnit() : "PCS")
+                .shelfLocation(p.getShelfLocation())
+                .manufacturerCode(p.getManufacturerCode())
+                .category(p.getCategory())
+                .unitPrice(p.getUnitPrice())
                 .quantityInStock(inv.getQuantityInStock())
                 .reorderLevel(inv.getReorderLevel())
                 .lowStock(inv.isLowStock())

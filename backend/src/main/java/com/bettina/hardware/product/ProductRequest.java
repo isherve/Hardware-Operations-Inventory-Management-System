@@ -15,6 +15,10 @@ public class ProductRequest {
     @NotBlank
     private String category;
     private String sku;
+    private String brand;
+    private String unit;
+    private String shelfLocation;
+    private String manufacturerCode;
     @NotNull
     @DecimalMin("0.01")
     private BigDecimal unitPrice;

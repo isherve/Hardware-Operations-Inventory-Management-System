@@ -1,5 +1,6 @@
 package com.bettina.hardware.product;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,12 @@ public class ProductController {
             @RequestParam(required = false) String search,
             @RequestParam(required = false) String category) {
         return productService.findAll(search, category);
+    }
+
+    @GetMapping("/lookup")
+    @Operation(summary = "Lookup product by SKU or manufacturer barcode (scanner)")
+    public ProductResponse lookup(@RequestParam String code) {
+        return productService.findByCode(code);
     }
 
     @GetMapping("/{id}")

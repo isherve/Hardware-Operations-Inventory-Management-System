@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ProductScanner } from "@/components/ProductScanner";
+import { ProductScanDetails } from "@/components/ProductScanDetails";
 
 interface LineItem {
   productId: number;
@@ -26,6 +28,7 @@ export default function NewSalePage() {
   const [lines, setLines] = useState<LineItem[]>([]);
   const [selectedProduct, setSelectedProduct] = useState("");
   const [qty, setQty] = useState("1");
+  const [scanned, setScanned] = useState<Product | null>(null);
 
   const { data: products = [] } = useQuery({
     queryKey: ["products"],
@@ -39,36 +42,52 @@ export default function NewSalePage() {
 
   const total = lines.reduce((sum, l) => sum + l.unitPrice * l.quantity, 0);
 
-  const addLine = () => {
-    const product = products.find((p) => p.productId === parseInt(selectedProduct));
-    if (!product) return;
-    const quantity = parseInt(qty);
-    if (quantity < 1) { toast.error("Quantity must be at least 1"); return; }
+  const addProductLine = (product: Product, quantity = 1) => {
+    if (quantity < 1) {
+      toast.error("Quantity must be at least 1");
+      return;
+    }
     if ((product.quantityInStock ?? 0) < quantity) {
       toast.error(`Only ${product.quantityInStock} in stock`);
       return;
     }
     const existing = lines.find((l) => l.productId === product.productId);
+    const nextQty = existing ? existing.quantity + quantity : quantity;
+    if ((product.quantityInStock ?? 0) < nextQty) {
+      toast.error(`Only ${product.quantityInStock} in stock`);
+      return;
+    }
     if (existing) {
-      setLines(lines.map((l) => l.productId === product.productId ? { ...l, quantity: l.quantity + quantity } : l));
+      setLines(lines.map((l) => (l.productId === product.productId ? { ...l, quantity: nextQty } : l)));
     } else {
-      setLines([...lines, {
-        productId: product.productId,
-        productName: product.productName,
-        quantity,
-        unitPrice: product.unitPrice,
-        maxStock: product.quantityInStock ?? 0,
-      }]);
+      setLines([
+        ...lines,
+        {
+          productId: product.productId,
+          productName: product.productName,
+          quantity,
+          unitPrice: product.unitPrice,
+          maxStock: product.quantityInStock ?? 0,
+        },
+      ]);
     }
     setQty("1");
+    toast.success(`Added ${product.productName}`);
+  };
+
+  const addLine = () => {
+    const product = products.find((p) => p.productId === parseInt(selectedProduct));
+    if (!product) return;
+    addProductLine(product, parseInt(qty) || 1);
   };
 
   const createSale = useMutation({
-    mutationFn: () => api.post<Sale>("/sales", {
-      customerId: customerId ? parseInt(customerId) : null,
-      paymentMethod,
-      lines: lines.map((l) => ({ productId: l.productId, quantity: l.quantity })),
-    }),
+    mutationFn: () =>
+      api.post<Sale>("/sales", {
+        customerId: customerId ? parseInt(customerId) : null,
+        paymentMethod,
+        lines: lines.map((l) => ({ productId: l.productId, quantity: l.quantity })),
+      }),
     onSuccess: (sale) => {
       qc.invalidateQueries({ queryKey: ["inventory"] });
       qc.invalidateQueries({ queryKey: ["sales"] });
@@ -83,15 +102,29 @@ export default function NewSalePage() {
       <h1 className="text-2xl font-bold">New Sale</h1>
 
       <Card>
-        <CardHeader><CardTitle>Customer (optional)</CardTitle></CardHeader>
+        <CardHeader>
+          <CardTitle>Customer (optional)</CardTitle>
+        </CardHeader>
         <CardContent className="space-y-4">
-          <select value={customerId} onChange={(e) => setCustomerId(e.target.value)} className="h-10 w-full rounded-md border border-slate-300 px-3 text-sm dark:border-slate-700 dark:bg-slate-950">
+          <select
+            value={customerId}
+            onChange={(e) => setCustomerId(e.target.value)}
+            className="h-10 w-full rounded-md border border-slate-300 px-3 text-sm dark:border-slate-700 dark:bg-slate-950"
+          >
             <option value="">Walk-in customer</option>
-            {customers.map((c) => <option key={c.customerId} value={c.customerId}>{c.customerName}</option>)}
+            {customers.map((c) => (
+              <option key={c.customerId} value={c.customerId}>
+                {c.customerName}
+              </option>
+            ))}
           </select>
           <div>
             <Label>Payment method</Label>
-            <select value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)} className="mt-1 h-10 w-full rounded-md border border-slate-300 px-3 text-sm dark:border-slate-700 dark:bg-slate-950">
+            <select
+              value={paymentMethod}
+              onChange={(e) => setPaymentMethod(e.target.value)}
+              className="mt-1 h-10 w-full rounded-md border border-slate-300 px-3 text-sm dark:border-slate-700 dark:bg-slate-950"
+            >
               <option value="CASH">Cash</option>
               <option value="MOMO">Mobile Money (MoMo)</option>
               <option value="BANK">Bank transfer</option>
@@ -104,16 +137,46 @@ export default function NewSalePage() {
       </Card>
 
       <Card>
-        <CardHeader><CardTitle>Add Items</CardTitle></CardHeader>
+        <CardHeader>
+          <CardTitle>Scan to add</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <ProductScanner
+            onProduct={(product) => {
+              setScanned(product);
+              addProductLine(product, 1);
+            }}
+            placeholder="Scan barcode/QR to add line (qty 1)"
+          />
+          {scanned && (
+            <ProductScanDetails
+              product={scanned}
+              onClose={() => setScanned(null)}
+              onAddToSale={(p) => addProductLine(p, parseInt(qty) || 1)}
+              showPrint={false}
+            />
+          )}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Add Items</CardTitle>
+        </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex flex-wrap gap-3">
             <div className="flex-1">
               <Label>Product</Label>
-              <select value={selectedProduct} onChange={(e) => setSelectedProduct(e.target.value)} className="h-10 w-full rounded-md border border-slate-300 px-3 text-sm">
+              <select
+                value={selectedProduct}
+                onChange={(e) => setSelectedProduct(e.target.value)}
+                className="h-10 w-full rounded-md border border-slate-300 px-3 text-sm dark:border-slate-700 dark:bg-slate-950"
+              >
                 <option value="">Select product</option>
                 {products.map((p) => (
                   <option key={p.productId} value={p.productId}>
-                    {p.sku ? `[${p.sku}] ` : ""}{p.productName} — {formatRwf(p.unitPrice)} (stock: {p.quantityInStock ?? 0})
+                    {p.sku ? `[${p.sku}] ` : ""}
+                    {p.productName} — {formatRwf(p.unitPrice)} (stock: {p.quantityInStock ?? 0})
                   </option>
                 ))}
               </select>
@@ -123,7 +186,9 @@ export default function NewSalePage() {
               <Input type="number" min={1} value={qty} onChange={(e) => setQty(e.target.value)} />
             </div>
             <div className="flex items-end">
-              <Button type="button" onClick={addLine}>Add</Button>
+              <Button type="button" onClick={addLine}>
+                Add
+              </Button>
             </div>
           </div>
 
@@ -146,7 +211,13 @@ export default function NewSalePage() {
                     <td className="py-2">{formatRwf(l.unitPrice)}</td>
                     <td className="py-2">{formatRwf(l.unitPrice * l.quantity)}</td>
                     <td className="py-2">
-                      <Button variant="ghost" size="sm" onClick={() => setLines(lines.filter((x) => x.productId !== l.productId))}>Remove</Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setLines(lines.filter((x) => x.productId !== l.productId))}
+                      >
+                        Remove
+                      </Button>
                     </td>
                   </tr>
                 ))}

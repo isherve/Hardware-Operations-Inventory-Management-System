@@ -1,0 +1,1794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Built In Hardware — Operations and Inventory Management System | Final Year Thesis</title>
+<meta name="author" content="Isherve Ishimwe">
+<meta name="description" content="Final Year Project Thesis Report: Built In Hardware — Operations and Inventory Management System">
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+  :root{
+    --navy:#1e3a5f;
+    --navy-light:#2d527d;
+    --orange:#ea580c;
+    --paper:#ffffff;
+    --ink:#1c1c1c;
+    --muted:#5b5b5b;
+    --line:#c9c9c9;
+    --table-head:#1e3a5f;
+    --table-alt:#f4f6f9;
+  }
+
+  *{box-sizing:border-box;}
+
+  html,body{
+    margin:0;
+    padding:0;
+    background:#e9edf2;
+    color:var(--ink);
+    font-family:Georgia,'Times New Roman',Times,serif;
+    font-size:16px;
+    line-height:1.65;
+  }
+
+  body{
+    background:#e9edf2;
+  }
+
+  .page-shell{
+    max-width:960px;
+    margin:0 auto;
+    background:var(--paper);
+    padding:0 0 60px 0;
+    box-shadow:0 0 24px rgba(0,0,0,0.12);
+  }
+
+  h1,h2,h3,h4,h5,.headfont{
+    font-family:'Segoe UI',Helvetica,Arial,sans-serif;
+    color:var(--navy);
+    font-weight:700;
+    line-height:1.25;
+  }
+
+  h1{font-size:1.9rem; border-bottom:3px solid var(--orange); padding-bottom:.35em; margin-top:0;}
+  h2{font-size:1.35rem; margin-top:2em; border-left:5px solid var(--orange); padding-left:.5em;}
+  h3{font-size:1.1rem; color:var(--navy-light); margin-top:1.6em;}
+  h4{font-size:1rem; color:var(--navy-light); font-style:italic;}
+
+  a{color:var(--navy); text-decoration:none; border-bottom:1px dotted var(--navy-light);}
+  a:hover{color:var(--orange); border-bottom-color:var(--orange);}
+
+  p{margin:0 0 1em 0; text-align:justify;}
+
+  .content{padding:10mm 18mm;}
+
+  /* ---------- Cover Page ---------- */
+  .cover{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    padding:20mm 20mm 15mm 20mm;
+    background:linear-gradient(180deg,#ffffff 0%, #f2f5f9 100%);
+    border-bottom:8px solid var(--orange);
+    page-break-after:always;
+  }
+  .cover .top-strap{
+    text-align:center;
+    font-family:'Segoe UI',Helvetica,Arial,sans-serif;
+    color:var(--navy);
+    letter-spacing:.12em;
+    font-size:.85rem;
+    text-transform:uppercase;
+    border-top:2px solid var(--navy);
+    border-bottom:2px solid var(--navy);
+    padding:.6em 0;
+  }
+  .cover .brandmark{
+    text-align:center;
+    margin-top:3.5em;
+  }
+  .cover .brandmark .brand-name{
+    font-family:'Segoe UI',Helvetica,Arial,sans-serif;
+    font-size:1.05rem;
+    color:var(--orange);
+    letter-spacing:.25em;
+    text-transform:uppercase;
+    font-weight:700;
+  }
+  .cover .main-title{
+    text-align:center;
+    font-family:'Segoe UI',Helvetica,Arial,sans-serif;
+    font-size:2.35rem;
+    color:var(--navy);
+    font-weight:800;
+    margin:.6em auto 0;
+    max-width:760px;
+    line-height:1.2;
+  }
+  .cover .subtitle{
+    text-align:center;
+    font-family:'Segoe UI',Helvetica,Arial,sans-serif;
+    font-size:1.15rem;
+    color:var(--muted);
+    margin-top:.9em;
+    font-style:italic;
+  }
+  .cover .meta-block{
+    text-align:center;
+    font-family:Georgia,serif;
+    font-size:1.02rem;
+    margin-top:3em;
+    color:var(--ink);
+  }
+  .cover .meta-block div{margin:.35em 0;}
+  .cover .meta-block .label{color:var(--muted); font-size:.85em;}
+  .cover .foot-strap{
+    text-align:center;
+    font-family:'Segoe UI',Helvetica,Arial,sans-serif;
+    font-size:.85rem;
+    color:var(--navy);
+    border-top:2px solid var(--navy);
+    padding-top:.7em;
+    letter-spacing:.05em;
+  }
+
+  /* ---------- PDF export tip ---------- */
+  .pdf-tip{
+    margin:18px 18mm 0 18mm;
+    background:#fff7ed;
+    border:1.5px dashed var(--orange);
+    border-radius:6px;
+    padding:14px 18px;
+    font-family:'Segoe UI',Helvetica,Arial,sans-serif;
+    font-size:.92rem;
+    color:#7c2d12;
+  }
+  .pdf-tip strong{color:var(--orange);}
+
+  /* ---------- Front matter ---------- */
+  .frontmatter{page-break-before:always; padding:10mm 18mm;}
+  .frontmatter h1{margin-bottom:1em;}
+  .declaration-sig{
+    margin-top:3em;
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:2em;
+    font-family:'Segoe UI',Helvetica,Arial,sans-serif;
+    font-size:.95rem;
+  }
+  .declaration-sig .sig-line{
+    border-top:1px solid var(--ink);
+    padding-top:.4em;
+    min-width:220px;
+  }
+
+  /* ---------- TOC / LOF / LOT ---------- */
+  .toc-list{list-style:none; padding-left:0; margin:0;}
+  .toc-list li{margin:.55em 0;}
+  .toc-list .toc-ch{font-weight:700; font-family:'Segoe UI',Helvetica,Arial,sans-serif;}
+  .toc-list ul{list-style:none; padding-left:1.6em; margin:.3em 0;}
+  .toc-list ul li{margin:.25em 0; font-size:.95em;}
+  .toc-dots{
+    display:inline-block;
+    border-bottom:1px dotted var(--line);
+    flex:1;
+    margin:0 .4em;
+    transform:translateY(-4px);
+  }
+  .toc-row{display:flex; align-items:baseline;}
+  .lof-lot-table{width:100%; border-collapse:collapse;}
+  .lof-lot-table td{padding:.35em .2em; border-bottom:1px dotted var(--line); vertical-align:top;}
+  .lof-lot-table td.num{width:70px; font-weight:700; color:var(--navy);}
+
+  /* ---------- Chapters ---------- */
+  .chapter{page-break-before:always; padding:10mm 18mm;}
+  .chapter-kicker{
+    font-family:'Segoe UI',Helvetica,Arial,sans-serif;
+    color:var(--orange);
+    text-transform:uppercase;
+    letter-spacing:.15em;
+    font-size:.8rem;
+    margin-bottom:.2em;
+  }
+
+  /* ---------- Tables ---------- */
+  table.data{
+    width:100%;
+    border-collapse:collapse;
+    margin:1.2em 0 1.6em 0;
+    font-size:.9rem;
+    font-family:'Segoe UI',Helvetica,Arial,sans-serif;
+  }
+  table.data caption{
+    caption-side:top;
+    text-align:left;
+    font-weight:700;
+    color:var(--navy);
+    padding-bottom:.5em;
+    font-size:.95rem;
+  }
+  table.data th{
+    background:var(--table-head);
+    color:#fff;
+    text-align:left;
+    padding:8px 10px;
+    border:1px solid var(--table-head);
+  }
+  table.data td{
+    padding:7px 10px;
+    border:1px solid var(--line);
+  }
+  table.data tr:nth-child(even) td{background:var(--table-alt);}
+  table.data td.center, table.data th.center{text-align:center;}
+
+  /* ---------- Figures ---------- */
+  figure{
+    margin:1.6em 0;
+    text-align:center;
+    page-break-inside:avoid;
+  }
+  figure img{
+    max-width:100%;
+    border:1px solid var(--line);
+    border-radius:4px;
+    box-shadow:0 1px 6px rgba(0,0,0,0.15);
+  }
+  figcaption{
+    font-family:'Segoe UI',Helvetica,Arial,sans-serif;
+    font-size:.85rem;
+    color:var(--muted);
+    margin-top:.6em;
+  }
+  figcaption b{color:var(--navy);}
+
+  .diagram-box{
+    border:1px solid var(--line);
+    border-radius:6px;
+    background:#fbfcfe;
+    padding:16px;
+    overflow-x:auto;
+  }
+  .mermaid{display:flex; justify-content:center;}
+
+  .chart-container{
+    max-width:640px;
+    height:360px;
+    margin:0 auto;
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:14px;
+    background:#fbfcfe;
+  }
+
+  /* ---------- Misc components ---------- */
+  .callout{
+    background:#eef3f9;
+    border-left:4px solid var(--navy);
+    padding:.8em 1em;
+    margin:1.2em 0;
+    font-size:.95rem;
+  }
+  .callout.warn{background:#fff1f0; border-left-color:#b91c1c; color:#7f1d1d;}
+  code, .code{
+    font-family:Consolas,'Courier New',monospace;
+    background:#f1f3f5;
+    padding:.1em .35em;
+    border-radius:3px;
+    font-size:.88em;
+    color:#0f3d5f;
+  }
+  pre.codeblock{
+    background:#0f1b2b;
+    color:#dbeafe;
+    padding:14px;
+    border-radius:6px;
+    overflow-x:auto;
+    font-family:Consolas,'Courier New',monospace;
+    font-size:.82rem;
+    line-height:1.5;
+  }
+  .badge{
+    display:inline-block;
+    background:var(--orange);
+    color:#fff;
+    font-family:'Segoe UI',Helvetica,Arial,sans-serif;
+    font-size:.72rem;
+    padding:2px 8px;
+    border-radius:10px;
+    margin-left:.4em;
+    vertical-align:middle;
+  }
+  ol.req-list li, ul.req-list li{margin:.4em 0;}
+  .refs-list{padding-left:1.4em;}
+  .refs-list li{margin:.7em 0; font-size:.95rem;}
+  .running-title{font-weight:700; color:var(--navy);}
+
+  /* fixed running header/footer — only meaningful for print */
+  .print-chrome{display:none;}
+
+  @media print{
+    html,body{background:#fff;}
+    .page-shell{box-shadow:none; max-width:none;}
+    .no-print{display:none !important;}
+    .content, .chapter, .frontmatter{padding:0 4mm;}
+    a{border-bottom:none; color:var(--ink);}
+    figure, table.data, .diagram-box, .chart-container{page-break-inside:avoid;}
+    .print-chrome{
+      display:block;
+      position:fixed;
+      left:0; right:0;
+      font-family:'Segoe UI',Helvetica,Arial,sans-serif;
+      font-size:8.5pt;
+      color:#7a7a7a;
+    }
+    .print-header{
+      top:0;
+      border-bottom:.5pt solid #bbb;
+      padding:4mm 8mm 1.5mm 8mm;
+      display:flex;
+      justify-content:space-between;
+    }
+    .print-footer{
+      bottom:0;
+      border-top:.5pt solid #bbb;
+      padding:1.5mm 8mm 4mm 8mm;
+      text-align:center;
+    }
+    @page{
+      size:A4;
+      margin:28mm 18mm 22mm 18mm;
+    }
+    .cover{min-height:auto;}
+  }
+</style>
+</head>
+<body>
+<div class="print-chrome print-header"><span>Built In Hardware — Operations and Inventory Management System</span><span>Final Year Thesis, 2026</span></div>
+<div class="print-chrome print-footer">Isherve Ishimwe — Department of Computer Science / Software Engineering</div>
+
+<div class="page-shell">
+
+<!-- ============================================================ -->
+<!-- COVER PAGE -->
+<!-- ============================================================ -->
+<section class="cover">
+  <div class="top-strap">Final Year Project &nbsp;•&nbsp; Thesis Report &nbsp;•&nbsp; Academic Year 2025 / 2026</div>
+
+  <div class="brandmark">
+    <div class="brand-name">Built In Hardware</div>
+    <h1 class="main-title" style="border:none; margin-top:.5em;">Built In Hardware — Operations and Inventory Management System</h1>
+    <div class="subtitle">Final Year Project / Thesis Report</div>
+    <div class="subtitle" style="font-size:1rem;">A Web-Based Point-of-Sale, Inventory and Operations Platform for a Hardware Retail Business in Kigali, Rwanda</div>
+  </div>
+
+  <div class="meta-block">
+    <div><span class="label">Author</span><br><strong>Isherve Ishimwe</strong></div>
+    <div><span class="label">Institution</span><br>Department of Computer Science / Software Engineering</div>
+    <div><span class="label">Location</span><br>Kigali, Rwanda</div>
+    <div><span class="label">Academic Year</span><br>2026</div>
+  </div>
+
+  <div class="foot-strap">Submitted in Partial Fulfilment of the Requirements for the Degree of Bachelor of Science in Software Engineering</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PDF TIP -->
+<!-- ============================================================ -->
+<div class="pdf-tip no-print">
+  <strong>💡 How to export this thesis as a PDF:</strong>
+  Press <code>Ctrl</code> + <code>P</code> (or <code>Cmd</code> + <code>P</code> on macOS) to open the print dialog, choose
+  <strong>“Save as PDF”</strong> as the destination, set paper size to <strong>A4</strong>, and make sure
+  <strong>“Background graphics”</strong> is enabled in <em>More settings</em> so that the cover page colours, table headers
+  and diagrams print correctly. See <code>README.md</code> in this folder for full step-by-step instructions.
+</div>
+
+<!-- ============================================================ -->
+<!-- DECLARATION -->
+<!-- ============================================================ -->
+<section class="frontmatter" id="declaration">
+  <h1>Declaration</h1>
+  <p>
+    I, <strong>Isherve Ishimwe</strong>, declare that this thesis, titled <em>“Built In Hardware — Operations and
+    Inventory Management System,”</em> is my own original work, undertaken as part of the final year project
+    requirement for the Bachelor of Science degree in Computer Science / Software Engineering. All designs,
+    source code, database schemas, diagrams and written analysis presented herein were produced by me unless
+    explicitly cited and referenced. Where external libraries, frameworks or open-source tools have been used
+    (React, Spring Boot, PostgreSQL, Flyway, Tailwind CSS, Mermaid.js, Chart.js, and others), they are
+    acknowledged in the References section and Chapter 4 (System Design and Architecture).
+  </p>
+  <p>
+    This work has not been submitted, in whole or in part, for the award of any other degree, diploma or
+    professional qualification at this or any other institution. All screenshots, seeded demonstration data
+    (products, employees, and customers), and performance figures reported in Chapter 7 were captured from a
+    working instance of the system built and deployed by the author.
+  </p>
+  <div class="declaration-sig">
+    <div class="sig-line">Signature: ________________________<br>Isherve Ishimwe</div>
+    <div class="sig-line">Date: ________________________</div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- ACKNOWLEDGEMENT -->
+<!-- ============================================================ -->
+<section class="frontmatter" id="acknowledgement">
+  <h1>Acknowledgement</h1>
+  <p>
+    I wish to extend my sincere gratitude to my project supervisor for the guidance, patience, and constructive
+    criticism offered throughout the design and implementation of this system. I am equally grateful to the
+    Department of Computer Science / Software Engineering for providing the academic framework, coursework, and
+    laboratory resources that made this project possible.
+  </p>
+  <p>
+    Special thanks go to the proprietors and staff of <strong>Built In Hardware</strong> in Kigali for allowing
+    their day-to-day operations — sales, stock-taking, and customer relationships — to serve as the real-world
+    case study that inspired and validated the requirements of this system. Finally, I thank my family, friends
+    and classmates for their continuous encouragement during the long hours of development, testing and
+    documentation that this thesis represents.
+  </p>
+</section>
+
+<!-- ============================================================ -->
+<!-- ABSTRACT -->
+<!-- ============================================================ -->
+<section class="frontmatter" id="abstract">
+  <h1>Abstract</h1>
+  <p>
+    Small and medium-sized hardware retail businesses in Rwanda, exemplified by <strong>Built In Hardware</strong>
+    in Kigali, continue to rely on manual ledgers and disconnected spreadsheets to manage stock, sales and
+    customer relationships. This practice introduces stock discrepancies, delayed reporting, weak accountability,
+    and an inability to scale staffing without losing operational visibility. This thesis presents the design,
+    implementation and evaluation of a full-stack web-based <em>Operations and Inventory Management System</em>
+    that digitises these workflows end-to-end. The system is built with a <strong>React 19</strong> single-page
+    frontend (Vite, TypeScript, Tailwind CSS) communicating over a JSON REST API with a <strong>Spring Boot 3.4
+    (Java 17)</strong> backend secured by stateless JSON Web Tokens. Data persistence is managed through
+    version-controlled <strong>Flyway</strong> migrations (V1–V4) across PostgreSQL, H2 and Supabase-hosted
+    PostgreSQL targets. The platform implements five distinct staff roles — Admin, Manager, Cashier, Sales
+    Assistant and Driver — each constrained by a role-based access control matrix enforced at the API layer;
+    notably, the Admin account is intentionally barred from creating point-of-sale transactions, preserving a
+    separation of duties between system administration and cash handling. Core features include real-time
+    inventory tracking with SKU codes, a point-of-sale module supporting Cash, Mobile Money and Bank payment
+    records, a customer loyalty points programme, soft-deletable customer records, stock-movement history, an
+    immutable audit log, exportable CSV/PDF reports, bilingual English/French localisation, and a persisted
+    light/dark theme. The completed system was deployed to a production-representative cloud stack — Vercel
+    (frontend), Render (backend, containerised) and Supabase (managed PostgreSQL) — and evaluated against sixteen
+    seeded products, twelve customers and nine employee accounts. Functional and role-based access testing
+    confirmed correct enforcement of all fifteen functional requirements, while performance and usability
+    observations are discussed alongside recommendations for future enhancement, including live mobile-money
+    gateway integration and predictive re-ordering.
+  </p>
+</section>
+
+<!-- ============================================================ -->
+<!-- TABLE OF CONTENTS -->
+<!-- ============================================================ -->
+<section class="frontmatter" id="toc">
+  <h1>Table of Contents</h1>
+  <ul class="toc-list">
+    <li class="toc-row"><a href="#declaration">Declaration</a></li>
+    <li class="toc-row"><a href="#acknowledgement">Acknowledgement</a></li>
+    <li class="toc-row"><a href="#abstract">Abstract</a></li>
+    <li class="toc-row"><a href="#lof">List of Figures</a></li>
+    <li class="toc-row"><a href="#lot">List of Tables</a></li>
+
+    <li class="toc-ch"><a href="#ch1">Chapter 1 — Introduction</a></li>
+    <ul>
+      <li><a href="#sec1-1">1.1 Background of the Study</a></li>
+      <li><a href="#sec1-2">1.2 Problem Statement</a></li>
+      <li><a href="#sec1-3">1.3 Objectives of the Study</a></li>
+      <li><a href="#sec1-4">1.4 Scope of the System</a></li>
+      <li><a href="#sec1-5">1.5 Significance of the Study</a></li>
+      <li><a href="#sec1-6">1.6 Organisation of the Report</a></li>
+    </ul>
+
+    <li class="toc-ch"><a href="#ch2">Chapter 2 — Literature Review and Related Systems</a></li>
+    <ul>
+      <li><a href="#sec2-1">2.1 Inventory and Point-of-Sale Systems: An Overview</a></li>
+      <li><a href="#sec2-2">2.2 Review of Existing Retail Management Solutions</a></li>
+      <li><a href="#sec2-3">2.3 Comparative Analysis</a></li>
+      <li><a href="#sec2-4">2.4 Research Gap</a></li>
+    </ul>
+
+    <li class="toc-ch"><a href="#ch3">Chapter 3 — Requirements Analysis and Specification</a></li>
+    <ul>
+      <li><a href="#sec3-1">3.1 Requirements Gathering Methodology</a></li>
+      <li><a href="#sec3-2">3.2 Functional Requirements</a></li>
+      <li><a href="#sec3-3">3.3 Non-Functional Requirements</a></li>
+      <li><a href="#sec3-4">3.4 Actors and Use Case Overview</a></li>
+      <li><a href="#sec3-5">3.5 Role-Based Access Control Matrix</a></li>
+    </ul>
+
+    <li class="toc-ch"><a href="#ch4">Chapter 4 — System Design and Architecture</a></li>
+    <ul>
+      <li><a href="#sec4-1">4.1 Architectural Overview</a></li>
+      <li><a href="#sec4-2">4.2 Technology Stack</a></li>
+      <li><a href="#sec4-3">4.3 Database Design</a></li>
+      <li><a href="#sec4-4">4.4 API Design</a></li>
+      <li><a href="#sec4-5">4.5 Process Design — The Sale Transaction</a></li>
+      <li><a href="#sec4-6">4.6 User Interface and Experience Design</a></li>
+    </ul>
+
+    <li class="toc-ch"><a href="#ch5">Chapter 5 — Implementation</a></li>
+    <ul>
+      <li><a href="#sec5-1">5.1 Development Environment and Tools</a></li>
+      <li><a href="#sec5-2">5.2 Backend Implementation</a></li>
+      <li><a href="#sec5-3">5.3 Database Migration Strategy</a></li>
+      <li><a href="#sec5-4">5.4 Frontend Implementation</a></li>
+      <li><a href="#sec5-5">5.5 Key Feature Implementation</a></li>
+      <li><a href="#sec5-6">5.6 Internationalisation and Theming</a></li>
+      <li><a href="#sec5-7">5.7 Implementation Challenges</a></li>
+    </ul>
+
+    <li class="toc-ch"><a href="#ch6">Chapter 6 — Testing and Quality Assurance</a></li>
+    <ul>
+      <li><a href="#sec6-1">6.1 Testing Strategy</a></li>
+      <li><a href="#sec6-2">6.2 Test Matrix and Coverage</a></li>
+      <li><a href="#sec6-3">6.3 Automated Testing Tools</a></li>
+      <li><a href="#sec6-4">6.4 Manual and User Acceptance Testing</a></li>
+      <li><a href="#sec6-5">6.5 Summary of Testing Outcomes</a></li>
+    </ul>
+
+    <li class="toc-ch"><a href="#ch7">Chapter 7 — Deployment, Results and Discussion</a></li>
+    <ul>
+      <li><a href="#sec7-1">7.1 Deployment Architecture</a></li>
+      <li><a href="#sec7-2">7.2 Live System Metrics</a></li>
+      <li><a href="#sec7-3">7.3 System Walkthrough (Screenshots)</a></li>
+      <li><a href="#sec7-4">7.4 Discussion of Findings</a></li>
+      <li><a href="#sec7-5">7.5 Limitations</a></li>
+    </ul>
+
+    <li class="toc-ch"><a href="#ch8">Chapter 8 — Conclusion and Recommendations</a></li>
+    <ul>
+      <li><a href="#sec8-1">8.1 Summary of the Study</a></li>
+      <li><a href="#sec8-2">8.2 Contributions</a></li>
+      <li><a href="#sec8-3">8.3 Recommendations for Future Work</a></li>
+      <li><a href="#sec8-4">8.4 Concluding Remarks</a></li>
+    </ul>
+
+    <li class="toc-ch"><a href="#references">References</a></li>
+    <li class="toc-ch"><a href="#appendixA">Appendix A — REST API Reference</a></li>
+    <li class="toc-ch"><a href="#appendixB">Appendix B — Credentials and Security Note</a></li>
+    <li class="toc-ch"><a href="#appendixC">Appendix C — Screenshot Index</a></li>
+  </ul>
+</section>
+
+<!-- ============================================================ -->
+<!-- LIST OF FIGURES -->
+<!-- ============================================================ -->
+<section class="frontmatter" id="lof">
+  <h1>List of Figures</h1>
+  <table class="lof-lot-table">
+    <tr><td class="num">Figure 3.1</td><td>Simplified use case overview by role</td></tr>
+    <tr><td class="num">Figure 4.1</td><td>System architecture — client, application and data layers</td></tr>
+    <tr><td class="num">Figure 4.2</td><td>Entity-relationship diagram of core domain entities</td></tr>
+    <tr><td class="num">Figure 4.3</td><td>Sequence diagram — the sale transaction lifecycle</td></tr>
+    <tr><td class="num">Figure 7.1</td><td>Deployment diagram — Vercel, Render and Supabase</td></tr>
+    <tr><td class="num">Figure 7.2</td><td>Home screen / role selection</td></tr>
+    <tr><td class="num">Figure 7.3</td><td>Admin login screen</td></tr>
+    <tr><td class="num">Figure 7.4</td><td>Administrator dashboard</td></tr>
+    <tr><td class="num">Figure 7.5</td><td>Inventory module with SKU (BI-) codes</td></tr>
+    <tr><td class="num">Figure 7.6</td><td>Customers and loyalty points module</td></tr>
+    <tr><td class="num">Figure 7.7</td><td>Employee management module</td></tr>
+    <tr><td class="num">Figure 7.8</td><td>Reports module</td></tr>
+    <tr><td class="num">Figure 7.9</td><td>Audit log module</td></tr>
+    <tr><td class="num">Figure 7.10</td><td>Sales history module</td></tr>
+    <tr><td class="num">Figure 7.11</td><td>Printable sales receipt</td></tr>
+    <tr><td class="num">Figure 7.12</td><td>Point-of-Sale — new sale (Cashier Alice Uwase)</td></tr>
+    <tr><td class="num">Figure 7.13</td><td>Top-selling products by revenue (bar chart)</td></tr>
+    <tr><td class="num">Figure 7.14</td><td>Employee role distribution (doughnut chart)</td></tr>
+    <tr><td class="num">Figure 7.15</td><td>Stock status overview: OK vs. Low Stock (pie chart)</td></tr>
+  </table>
+</section>
+
+<!-- ============================================================ -->
+<!-- LIST OF TABLES -->
+<!-- ============================================================ -->
+<section class="frontmatter" id="lot">
+  <h1>List of Tables</h1>
+  <table class="lof-lot-table">
+    <tr><td class="num">Table 2.1</td><td>Comparative analysis of related inventory/POS systems</td></tr>
+    <tr><td class="num">Table 3.1</td><td>Functional requirements (FR1–FR15)</td></tr>
+    <tr><td class="num">Table 3.2</td><td>Non-functional requirements</td></tr>
+    <tr><td class="num">Table 3.3</td><td>Role-based access control (RBAC) matrix</td></tr>
+    <tr><td class="num">Table 4.1</td><td>Technology stack summary</td></tr>
+    <tr><td class="num">Table 5.1</td><td>Flyway database migration versions</td></tr>
+    <tr><td class="num">Table 6.1</td><td>Test matrix and coverage summary</td></tr>
+    <tr><td class="num">Table 7.1</td><td>Live seeded system metrics</td></tr>
+    <tr><td class="num">Table A.1</td><td>REST API endpoint reference</td></tr>
+  </table>
+</section>
+
+<!-- ============================================================ -->
+<!-- CHAPTER 1 -->
+<!-- ============================================================ -->
+<section class="chapter" id="ch1">
+  <div class="chapter-kicker">Chapter One</div>
+  <h1>1. Introduction</h1>
+
+  <h2 id="sec1-1">1.1 Background of the Study</h2>
+  <p>
+    Hardware retail is one of the most operationally demanding segments of small and medium enterprise (SME)
+    commerce. A single hardware shop such as <strong>Built In Hardware</strong>, located in Kigali, Rwanda, may
+    stock dozens of stock-keeping units spanning roofing sheets, paints, plumbing fittings, padlocks, lighting
+    accessories and hand tools, each with different unit prices, reorder thresholds and supplier lead times.
+    Historically, such businesses in Rwanda and across the region have managed these operations using paper
+    ledgers, receipt books and, at best, ad-hoc spreadsheets maintained by a single trusted employee. While
+    functional at a very small scale, this approach becomes fragile as staff numbers grow, as customers begin
+    to expect faster checkout and receipts, and as owners require timely, trustworthy figures for tax reporting
+    and restocking decisions.
+  </p>
+  <p>
+    The proliferation of affordable internet connectivity, cloud hosting, and mature open-source web frameworks
+    has made it practical for a final-year software engineering student to design and deliver a production-grade
+    management information system for exactly this kind of business, without the licensing costs typically
+    associated with commercial Enterprise Resource Planning (ERP) or Point-of-Sale (POS) suites. This thesis
+    documents the analysis, design, implementation, testing and deployment of such a system, built specifically
+    around the operational realities of Built In Hardware: multiple staff roles with different responsibilities,
+    a Rwandan Franc (RWF) pricing environment, a mix of cash and mobile-money paying customers, and a genuine
+    need for accountability over who sold what, when, and to whom.
+  </p>
+
+  <h2 id="sec1-2">1.2 Problem Statement</h2>
+  <p>
+    Built In Hardware, like many comparable retailers, faced four persistent operational problems prior to this
+    project: (1) <em>stock visibility</em> — the true quantity of any given product was only known after a
+    manual physical count, making it easy to oversell or to miss re-order points; (2) <em>accountability</em> —
+    without a digital record tied to an authenticated staff member, it was difficult to establish who processed a
+    given sale, adjusted stock, or edited a customer record; (3) <em>reporting latency</em> — daily and monthly
+    performance figures (revenue, top-selling products, low-stock alerts) required manual tallying, delaying
+    decision-making; and (4) <em>separation of duties</em> — the same individual who administered the system
+    (e.g., created employee accounts or products) could, in a poorly designed system, also process sales,
+    creating an internal-control weakness. This thesis addresses these four problems through a single, coherent
+    software system with a strict role model, transactional stock updates, an audit trail, and generated reports.
+  </p>
+
+  <h2 id="sec1-3">1.3 Objectives of the Study</h2>
+  <p><strong>General objective:</strong> To design, implement and evaluate a web-based Operations and Inventory
+  Management System that digitises the sales, inventory, customer, employee and reporting workflows of a
+  Rwandan hardware retail business.</p>
+  <p><strong>Specific objectives:</strong></p>
+  <ul class="req-list">
+    <li>To analyse the operational workflows of Built In Hardware and translate them into a formal set of
+      functional and non-functional software requirements.</li>
+    <li>To design a secure, role-based system architecture separating administrative duties from point-of-sale
+      duties, in line with sound internal-control principles.</li>
+    <li>To implement a relational database schema, managed through version-controlled migrations, capable of
+      supporting products, inventory, sales, customers, employees, financial records, stock movements and audit
+      logs.</li>
+    <li>To implement a REST API (Spring Boot) and a responsive single-page frontend (React) that together
+      deliver point-of-sale, inventory, customer loyalty, employee management, reporting and audit features.</li>
+    <li>To test the system for functional correctness, role-based access enforcement, and usability, and to
+      deploy a live instance using free-tier cloud infrastructure representative of production hosting.</li>
+  </ul>
+
+  <h2 id="sec1-4">1.4 Scope of the System</h2>
+  <p>
+    The system covers five staff roles (Admin, Manager, Cashier, Sales Assistant and Driver), product and
+    inventory management with SKU codes, a point-of-sale workflow supporting Cash, Mobile Money (MoMo) and Bank
+    payment records, customer relationship management with a loyalty-points programme and soft-delete, stock
+    movement history, an audit log, daily/monthly/inventory/transaction reporting with CSV and PDF export, and a
+    bilingual (English/French) interface with a persisted light/dark theme. The scope explicitly excludes live
+    integration with a real mobile-money payment gateway (e.g., MTN MoMo API) — payment methods are recorded as
+    metadata on each sale rather than processed through a live payment gateway — and excludes supplier-side
+    procurement automation, which is noted as future work in Chapter 8.
+  </p>
+
+  <h2 id="sec1-5">1.5 Significance of the Study</h2>
+  <p>
+    For Built In Hardware, the system directly replaces error-prone manual bookkeeping with real-time inventory
+    counts, itemised digital receipts, and exportable reports that support both day-to-day management and
+    external reporting obligations. Academically, the project demonstrates the application of modern full-stack
+    engineering practices — versioned database migrations, stateless JWT authentication, role-based authorization,
+    componentised frontend architecture, and cloud-native deployment — to a genuine, non-trivial business domain.
+    More broadly, the design decisions documented here (particularly the explicit separation between
+    administrative and transactional roles) offer a reusable reference architecture for other Rwandan SME retail
+    businesses considering similar digitisation efforts.
+  </p>
+
+  <h2 id="sec1-6">1.6 Organisation of the Report</h2>
+  <p>
+    The remainder of this report is organised as follows. Chapter 2 reviews related literature and existing
+    inventory/POS systems and positions this project relative to them. Chapter 3 documents the requirements
+    analysis, including functional requirements, non-functional requirements, actors, and the role-based access
+    control matrix. Chapter 4 presents the system architecture, database design, API design and process design.
+    Chapter 5 describes the implementation of both backend and frontend, including the database migration
+    strategy and key feature implementations. Chapter 6 covers the testing strategy and outcomes. Chapter 7
+    presents the deployment architecture, live system metrics, and an illustrated walkthrough of the working
+    system, followed by a discussion of findings and limitations. Chapter 8 concludes the report with a summary
+    of contributions and recommendations for future work, followed by references and three appendices.
+  </p>
+</section>
+
+<!-- ============================================================ -->
+<!-- CHAPTER 2 -->
+<!-- ============================================================ -->
+<section class="chapter" id="ch2">
+  <div class="chapter-kicker">Chapter Two</div>
+  <h1>2. Literature Review and Related Systems</h1>
+
+  <h2 id="sec2-1">2.1 Inventory and Point-of-Sale Systems: An Overview</h2>
+  <p>
+    Inventory management systems (IMS) and point-of-sale (POS) systems form the operational backbone of retail
+    software. An IMS is responsible for maintaining an accurate, real-time record of stock levels, movements and
+    valuation, while a POS system is responsible for capturing sales transactions, computing totals, applying
+    payments, and updating stock and financial records atomically. In mature retail software architectures, these
+    two concerns are unified into a single transactional system so that a sale simultaneously (a) decrements
+    inventory, (b) creates a financial ledger entry, and (c) updates any loyalty or customer-relationship data —
+    exactly the pattern adopted for the Built In Hardware system and detailed in Chapter 4.
+  </p>
+  <p>
+    Academic and industry literature on retail information systems consistently identifies three recurring
+    success factors: (1) <em>data integrity under concurrency</em>, ensuring that simultaneous sales by different
+    cashiers do not corrupt stock counts; (2) <em>auditability</em>, the ability to reconstruct who performed a
+    given action and when; and (3) <em>accessibility</em>, meaning the system must be usable by staff with
+    varying levels of digital literacy on affordable hardware and modest internet connections — a particularly
+    relevant constraint in the Rwandan SME context targeted by this project.
+  </p>
+
+  <h2 id="sec2-2">2.2 Review of Existing Retail Management Solutions</h2>
+  <p>
+    Commercial POS platforms such as Square, Loyverse and QuickBooks POS offer polished user interfaces and rich
+    third-party integrations, but typically require recurring subscription fees, assume the availability of
+    proprietary card-payment hardware, and offer limited customisation of role definitions or workflow rules to
+    fit a specific business such as Built In Hardware. Locally, many Rwandan hardware retailers continue to rely
+    on paper-based ledgers or generic spreadsheet templates (e.g., Microsoft Excel) which, while free and
+    flexible, provide no access control, no audit trail, and no automatic stock-to-sale linkage, leaving
+    reconciliation entirely to manual effort. A smaller number of custom-built systems exist in the East African
+    market, but access to their design documentation and source code is limited, restricting academic comparison
+    to publicly observable features and vendor documentation.
+  </p>
+
+  <h2 id="sec2-3">2.3 Comparative Analysis</h2>
+  <p>
+    Table 2.1 summarises a comparison between manual record-keeping, a representative generic commercial POS
+    product, and the system developed in this thesis, across dimensions that matter most to a business such as
+    Built In Hardware.
+  </p>
+  <table class="data">
+    <caption>Table 2.1 — Comparative analysis of related inventory/POS systems</caption>
+    <thead>
+      <tr><th>Criterion</th><th>Manual Ledger / Spreadsheet</th><th>Generic Commercial POS</th><th>Built In Hardware System (this project)</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Real-time inventory tracking</td><td>No — periodic manual counts</td><td>Yes</td><td>Yes — transactional decrement on every sale</td></tr>
+      <tr><td>Role-based access control</td><td>None</td><td>Basic (owner/cashier)</td><td>Five granular roles with endpoint-level enforcement</td></tr>
+      <tr><td>Separation of admin and sales duties</td><td>Not enforced</td><td>Rarely enforced by default</td><td>Enforced — Admin cannot record sales</td></tr>
+      <tr><td>Audit trail of sensitive actions</td><td>None</td><td>Vendor-dependent, often paid tier</td><td>Built-in audit log (sales, refunds, stock, customer edits)</td></tr>
+      <tr><td>Customer loyalty programme</td><td>Informal / none</td><td>Add-on, often paid</td><td>Built-in, configurable points-per-RWF rate</td></tr>
+      <tr><td>Local currency and payment methods</td><td>Manual notes</td><td>Depends on region support</td><td>Native RWF, Cash / MoMo / Bank recorded natively</td></tr>
+      <tr><td>Bilingual interface (EN/FR)</td><td>N/A</td><td>Rare / paid localisation packs</td><td>Built-in English/French toggle</td></tr>
+      <tr><td>Recurring licensing cost</td><td>None (but high labour cost)</td><td>Monthly subscription per till</td><td>Self-hosted; free-tier cloud deployment demonstrated</td></tr>
+      <tr><td>Source code ownership / customisation</td><td>N/A</td><td>Closed source</td><td>Fully owned, open, and extensible codebase</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="sec2-4">2.4 Research Gap</h2>
+  <p>
+    The review above highlights a clear gap between (a) manual or spreadsheet-based methods that are free but
+    offer no structural safeguards, and (b) commercial POS platforms that offer safeguards but at a recurring
+    cost and with limited ability to encode business-specific rules such as “the Admin role must never process a
+    sale.” This thesis fills that gap for the specific case of Built In Hardware by delivering a purpose-built,
+    self-hosted system that combines the safeguards of commercial software (RBAC, audit logging, transactional
+    stock updates) with the zero-licensing-cost and full customisability of a bespoke, open codebase, deployed on
+    free-tier cloud infrastructure suitable for an SME budget.
+  </p>
+</section>
+
+<!-- ============================================================ -->
+<!-- CHAPTER 3 -->
+<!-- ============================================================ -->
+<section class="chapter" id="ch3">
+  <div class="chapter-kicker">Chapter Three</div>
+  <h1>3. Requirements Analysis and Specification</h1>
+
+  <h2 id="sec3-1">3.1 Requirements Gathering Methodology</h2>
+  <p>
+    Requirements were elicited through a combination of informal interviews with hardware-shop staff regarding
+    their daily routines (opening stock counts, customer walk-ins, supplier deliveries, end-of-day reconciliation),
+    direct observation of pain points in the existing manual process, and iterative prototyping of screens for
+    the point-of-sale and inventory modules. Requirements were then formalised into the functional requirements
+    (Table 3.1) and non-functional requirements (Table 3.2) presented below, and validated against the final
+    implementation described in Chapters 4 and 5.
+  </p>
+
+  <h2 id="sec3-2">3.2 Functional Requirements</h2>
+  <p>Table 3.1 enumerates the fifteen core functional requirements (FR1–FR15) that the system was designed to satisfy.</p>
+  <table class="data">
+    <caption>Table 3.1 — Functional requirements (FR1–FR15)</caption>
+    <thead><tr><th style="width:70px;">ID</th><th>Requirement</th></tr></thead>
+    <tbody>
+      <tr><td>FR1</td><td>The system shall allow an Admin to authenticate through a dedicated admin login flow, separate from the staff login flow.</td></tr>
+      <tr><td>FR2</td><td>The system shall allow employees (Manager, Cashier, Sales Assistant, Driver) to authenticate using credentials issued by the Admin.</td></tr>
+      <tr><td>FR3</td><td>The system shall enforce role-based access control on every REST endpoint using Spring Security and JWT role claims.</td></tr>
+      <tr><td>FR4</td><td>The system shall allow the Admin to create, update, and deactivate employee accounts, assigning exactly one of four roles.</td></tr>
+      <tr><td>FR5</td><td>The system shall allow the Admin to create, update and delete product records, each carrying a unique SKU prefixed “BI-”.</td></tr>
+      <tr><td>FR6</td><td>The system shall maintain a one-to-one inventory record per product, tracking quantity in stock and a configurable reorder level.</td></tr>
+      <tr><td>FR7</td><td>The system shall allow Admin and Manager to record stock-in (goods received) events, increasing inventory and logging a STOCK_IN movement.</td></tr>
+      <tr><td>FR8</td><td>The system shall allow Manager, Cashier and Sales Assistant — but explicitly <strong>not</strong> Admin — to record a new sale of one or more line items, atomically decrementing inventory.</td></tr>
+      <tr><td>FR9</td><td>The system shall support three recorded payment methods per sale: CASH, MOMO (mobile money reference) and BANK (bank transfer).</td></tr>
+      <tr><td>FR10</td><td>The system shall automatically compute and award loyalty points to a registered customer, based on a configurable rate (default: 1 point per 1,000 RWF spent).</td></tr>
+      <tr><td>FR11</td><td>The system shall allow Admin and Manager to process a refund on an existing sale, restoring inventory and logging a REFUND financial record and stock movement.</td></tr>
+      <tr><td>FR12</td><td>The system shall allow authorised users to create, update, and soft-delete customer records without losing historical sales association.</td></tr>
+      <tr><td>FR13</td><td>The system shall log security- and business-relevant actions (sale creation, refunds, stock adjustments, customer/employee edits) to a queryable, append-only audit log.</td></tr>
+      <tr><td>FR14</td><td>The system shall generate daily, monthly, inventory and transaction reports, exportable as CSV and PDF documents.</td></tr>
+      <tr><td>FR15</td><td>The system shall provide a bilingual (English/French) interface and a persisted light/dark theme preference.</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="sec3-3">3.3 Non-Functional Requirements</h2>
+  <table class="data">
+    <caption>Table 3.2 — Non-functional requirements</caption>
+    <thead><tr><th style="width:150px;">Category</th><th>Requirement</th></tr></thead>
+    <tbody>
+      <tr><td>Security</td><td>Passwords hashed with BCrypt; stateless JWT bearer tokens with expiry; endpoint-level RBAC; HTTPS enforced in production hosting.</td></tr>
+      <tr><td>Performance</td><td>API responses for CRUD and reporting endpoints return within sub-second latency against the seeded dataset on typical broadband connections.</td></tr>
+      <tr><td>Usability</td><td>Responsive Tailwind CSS layout usable on desktop and tablet screens common at a shop counter; consistent iconography (lucide-react); toast notifications (sonner) for action feedback.</td></tr>
+      <tr><td>Availability &amp; Reliability</td><td>Versioned Flyway migrations guarantee a reproducible schema on every deployment target; free-tier Render hosting may incur a cold-start delay of roughly 30 seconds after inactivity.</td></tr>
+      <tr><td>Maintainability</td><td>Layered backend architecture (controller / service / repository); componentised React frontend; OpenAPI/Swagger documentation generated automatically from backend annotations.</td></tr>
+      <tr><td>Portability</td><td>Backend supports three interchangeable database profiles — local/Docker PostgreSQL, H2 file database for offline development, and Supabase-hosted PostgreSQL for production — selected via Spring profiles.</td></tr>
+      <tr><td>Scalability</td><td>Stateless JWT authentication removes server-side session state, allowing the API to be horizontally scaled behind a load balancer if required.</td></tr>
+      <tr><td>Data Integrity</td><td>Database-level CHECK constraints (e.g., role enumeration, non-negative stock) and transactional service methods prevent partial or inconsistent writes.</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="sec3-4">3.4 Actors and Use Case Overview</h2>
+  <p>
+    The system recognises five actors, each mapped to a fixed set of permitted operations: <strong>Admin</strong>
+    (system configuration, product catalogue, employee management, reporting and audit — but not sales),
+    <strong>Manager</strong> (full operational access including sales, refunds, stock adjustment and reporting),
+    <strong>Cashier</strong> and <strong>Sales Assistant</strong> (day-to-day sales and customer management), and
+    <strong>Driver</strong> (limited access focused on delivery-related visibility). Figure 3.1 presents a
+    simplified use-case overview illustrating which high-level use cases each actor may invoke.
+  </p>
+  <figure>
+    <div class="diagram-box">
+      <pre class="mermaid">
+flowchart TB
+    Admin(["Admin"])
+    Manager(["Manager"])
+    Cashier(["Cashier"])
+    SalesAsst(["Sales Assistant"])
+    Driver(["Driver"])
+
+    UC1([Manage Employees])
+    UC2([Manage Products])
+    UC3([Adjust / Stock-in Inventory])
+    UC4([Record Sale])
+    UC5([Process Refund])
+    UC6([Manage Customers])
+    UC7([View Reports])
+    UC8([View Audit Log])
+    UC9([View Dashboard])
+    UC10([View Delivery Assignments])
+
+    Admin --> UC1
+    Admin --> UC2
+    Admin --> UC7
+    Admin --> UC8
+    Admin --> UC9
+    Manager --> UC3
+    Manager --> UC4
+    Manager --> UC5
+    Manager --> UC6
+    Manager --> UC7
+    Manager --> UC9
+    Cashier --> UC4
+    Cashier --> UC6
+    Cashier --> UC9
+    SalesAsst --> UC4
+    SalesAsst --> UC6
+    SalesAsst --> UC9
+    Driver --> UC10
+    Driver --> UC9
+      </pre>
+    </div>
+    <figcaption><b>Figure 3.1.</b> Simplified use case overview by role. Note that Admin has no path to “Record Sale”, reflecting FR8.</figcaption>
+  </figure>
+
+  <h2 id="sec3-5">3.5 Role-Based Access Control Matrix</h2>
+  <p>
+    Table 3.3 documents the authoritative role-based access control (RBAC) matrix implemented at the REST API
+    layer via Spring Security request matchers (see Chapter 5). This matrix was used both as a design
+    specification and as the basis for the access-control test cases described in Chapter 6.
+  </p>
+  <table class="data">
+    <caption>Table 3.3 — Role-based access control (RBAC) matrix</caption>
+    <thead><tr><th>Action</th><th class="center">Admin</th><th class="center">Manager</th><th class="center">Cashier</th><th class="center">Sales Assistant</th><th class="center">Driver</th></tr></thead>
+    <tbody>
+      <tr><td>View dashboard</td><td class="center">✓</td><td class="center">✓</td><td class="center">✓</td><td class="center">✓</td><td class="center">✓</td></tr>
+      <tr><td>View inventory</td><td class="center">✓</td><td class="center">✓</td><td class="center">✓</td><td class="center">✓</td><td class="center">✓</td></tr>
+      <tr><td>Adjust / stock-in inventory</td><td class="center">✓</td><td class="center">✓</td><td class="center">—</td><td class="center">—</td><td class="center">—</td></tr>
+      <tr><td>Create / edit / delete products</td><td class="center">✓</td><td class="center">—</td><td class="center">—</td><td class="center">—</td><td class="center">—</td></tr>
+      <tr><td>Record new sale</td><td class="center">—</td><td class="center">✓</td><td class="center">✓</td><td class="center">✓</td><td class="center">—</td></tr>
+      <tr><td>View sales</td><td class="center">✓ (all)</td><td class="center">✓ (all)</td><td class="center">✓ (own)</td><td class="center">✓ (own)</td><td class="center">—</td></tr>
+      <tr><td>Process refund</td><td class="center">✓</td><td class="center">✓</td><td class="center">—</td><td class="center">—</td><td class="center">—</td></tr>
+      <tr><td>View customers</td><td class="center">✓</td><td class="center">✓</td><td class="center">✓</td><td class="center">✓</td><td class="center">✓</td></tr>
+      <tr><td>Add / edit customers</td><td class="center">✓</td><td class="center">✓</td><td class="center">✓</td><td class="center">✓</td><td class="center">—</td></tr>
+      <tr><td>Delete (soft) customers</td><td class="center">✓</td><td class="center">✓</td><td class="center">—</td><td class="center">—</td><td class="center">—</td></tr>
+      <tr><td>Manage employees</td><td class="center">✓</td><td class="center">—</td><td class="center">—</td><td class="center">—</td><td class="center">—</td></tr>
+      <tr><td>View audit log</td><td class="center">✓</td><td class="center">✓</td><td class="center">—</td><td class="center">—</td><td class="center">—</td></tr>
+      <tr><td>View / export reports</td><td class="center">✓</td><td class="center">✓</td><td class="center">—</td><td class="center">—</td><td class="center">—</td></tr>
+    </tbody>
+  </table>
+  <p>
+    The single most consequential design decision in this matrix — and one that distinguishes this system from
+    many introductory POS clones — is that <strong>Admin cannot record a sale</strong>. This mirrors real-world
+    separation-of-duties controls: the person who configures the system, creates staff accounts and can view the
+    audit log should not also be the one handling cash at the till, reducing the risk of undetected fraud.
+  </p>
+</section>
+
+<!-- ============================================================ -->
+<!-- CHAPTER 4 -->
+<!-- ============================================================ -->
+<section class="chapter" id="ch4">
+  <div class="chapter-kicker">Chapter Four</div>
+  <h1>4. System Design and Architecture</h1>
+
+  <h2 id="sec4-1">4.1 Architectural Overview</h2>
+  <p>
+    The system follows a classic three-tier web architecture: a <strong>client (presentation) layer</strong>
+    built as a React single-page application; an <strong>application (service) layer</strong> built as a Spring
+    Boot REST API responsible for business logic, security and validation; and a <strong>data layer</strong>
+    consisting of a relational database (PostgreSQL in production/Docker, H2 for local development, or a
+    Supabase-hosted PostgreSQL instance) managed through version-controlled Flyway migrations. Figure 4.1
+    illustrates this arrangement and the request flow between layers.
+  </p>
+  <figure>
+    <div class="diagram-box">
+      <pre class="mermaid">
+flowchart LR
+    subgraph Client["Client Layer"]
+        Browser["React 19 + Vite SPA<br/>TypeScript, Tailwind CSS"]
+    end
+    subgraph Server["Application Layer — Spring Boot 3.4 (Java 17)"]
+        API["REST Controllers<br/>/api/**"]
+        SEC["Spring Security<br/>JWT Filter"]
+        SVC["Service Layer<br/>Business Logic"]
+        REPO["Spring Data JPA<br/>Repositories"]
+    end
+    subgraph Data["Data Layer"]
+        DB[("PostgreSQL / H2 / Supabase")]
+        FLY["Flyway Migrations<br/>V1-V4"]
+    end
+    Browser -- "HTTPS / JSON" --> API
+    API --> SEC
+    SEC --> SVC
+    SVC --> REPO
+    REPO --> DB
+    FLY -.->|schema versioning| DB
+      </pre>
+    </div>
+    <figcaption><b>Figure 4.1.</b> System architecture — client, application and data layers.</figcaption>
+  </figure>
+
+  <h2 id="sec4-2">4.2 Technology Stack</h2>
+  <table class="data">
+    <caption>Table 4.1 — Technology stack summary</caption>
+    <thead><tr><th>Layer</th><th>Technology</th><th>Purpose / Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Frontend framework</td><td>React 19.2 + Vite 8, TypeScript 5</td><td>Component-based single-page application; fast dev server and build tool</td></tr>
+      <tr><td>Frontend styling</td><td>Tailwind CSS 4</td><td>Utility-first styling; supports light/dark theming</td></tr>
+      <tr><td>Frontend state / data</td><td>TanStack Query 5, React Router 7</td><td>Server-state caching and client-side routing</td></tr>
+      <tr><td>Frontend UI primitives</td><td>Radix UI, class-variance-authority, lucide-react, sonner, date-fns</td><td>Accessible components, icons, toasts, date utilities (shadcn-style UI)</td></tr>
+      <tr><td>Backend framework</td><td>Spring Boot 3.4.1, Java 17</td><td>REST API, dependency injection, auto-configuration</td></tr>
+      <tr><td>Backend security</td><td>Spring Security + JJWT 0.12.6</td><td>Stateless JWT authentication and role-based authorisation</td></tr>
+      <tr><td>Persistence</td><td>Spring Data JPA (Hibernate)</td><td>ORM mapping of entities to relational tables</td></tr>
+      <tr><td>Database migration</td><td>Flyway Core + flyway-database-postgresql</td><td>Version-controlled schema evolution (V1–V4)</td></tr>
+      <tr><td>Databases</td><td>PostgreSQL 17 (Docker/local/Supabase), H2 (dev)</td><td>Interchangeable via Spring profiles</td></tr>
+      <tr><td>API documentation</td><td>springdoc-openapi 2.7.0 (Swagger UI)</td><td>Interactive API docs generated from annotations</td></tr>
+      <tr><td>Report generation</td><td>OpenPDF 2.0.3, OpenCSV 5.9</td><td>Server-side PDF and CSV export of reports</td></tr>
+      <tr><td>Build tooling</td><td>Maven (backend), npm/Vite (frontend), Lombok</td><td>Dependency management and boilerplate reduction</td></tr>
+      <tr><td>Frontend hosting</td><td>Vercel</td><td>Static build hosting with global CDN</td></tr>
+      <tr><td>Backend hosting</td><td>Render (Docker container)</td><td>Blueprint-based deployment via <code>render.yaml</code></td></tr>
+      <tr><td>Database hosting</td><td>Supabase</td><td>Managed PostgreSQL for production</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="sec4-3">4.3 Database Design</h2>
+  <p>
+    The relational schema is organised around ten core tables: <code>app_admin</code>, <code>employee</code>,
+    <code>customer</code>, <code>product</code>, <code>inventory</code>, <code>sales</code>,
+    <code>sale_product</code> (the sale line-item join table), <code>financial_record</code>,
+    <code>stock_movement</code>, and <code>audit_log</code>. The Admin account is deliberately modelled in a
+    <em>separate</em> table from staff employees, reinforcing at the schema level that administrative identity
+    is distinct from operational (sales-capable) identity. Each product has exactly one inventory row
+    (enforced by a unique foreign key), and every sale is decomposed into one or more <code>sale_product</code>
+    rows capturing the quantity and unit price <em>at the time of sale</em>, which protects historical sales
+    figures from being altered by later product price changes. Figure 4.2 presents the entity-relationship
+    diagram of these core entities.
+  </p>
+  <figure>
+    <div class="diagram-box">
+      <pre class="mermaid">
+erDiagram
+    ADMIN {
+        bigint admin_id PK
+        string admin_name
+        string username
+        string password_hash
+    }
+    EMPLOYEE {
+        bigint employee_id PK
+        string employee_name
+        string role
+        string username
+        string status
+    }
+    CUSTOMER {
+        bigint customer_id PK
+        string customer_name
+        string phone_number
+        int loyalty_points
+        timestamp deleted_at
+    }
+    PRODUCT {
+        bigint product_id PK
+        string product_name
+        string sku
+        string category
+        decimal unit_price
+    }
+    INVENTORY {
+        bigint inventory_id PK
+        bigint product_id FK
+        int quantity_in_stock
+        int reorder_level
+    }
+    SALES {
+        bigint sale_id PK
+        bigint employee_id FK
+        bigint customer_id FK
+        date sale_date
+        decimal total_amount
+        string payment_method
+        boolean refunded
+    }
+    SALE_PRODUCT {
+        bigint sale_id FK
+        bigint product_id FK
+        int quantity
+        decimal unit_price_at_sale
+    }
+    FINANCIAL_RECORD {
+        bigint transaction_id PK
+        bigint sale_id FK
+        decimal amount
+        string transaction_type
+    }
+    STOCK_MOVEMENT {
+        bigint movement_id PK
+        bigint product_id FK
+        int quantity
+        string movement_type
+    }
+    AUDIT_LOG {
+        bigint audit_id PK
+        string actor_username
+        string action
+        string entity_type
+    }
+
+    PRODUCT ||--|| INVENTORY : "tracked in"
+    PRODUCT ||--o{ SALE_PRODUCT : "sold as"
+    SALES ||--|{ SALE_PRODUCT : contains
+    EMPLOYEE ||--o{ SALES : records
+    CUSTOMER ||--o{ SALES : places
+    SALES ||--o| FINANCIAL_RECORD : generates
+    PRODUCT ||--o{ STOCK_MOVEMENT : has
+      </pre>
+    </div>
+    <figcaption><b>Figure 4.2.</b> Entity-relationship diagram of core domain entities.</figcaption>
+  </figure>
+  <p>
+    Referential and domain integrity is reinforced with CHECK constraints — for example, <code>employee.role</code>
+    is constrained to one of <code>CASHIER</code>, <code>MANAGER</code>, <code>SALES_ASSISTANT</code>,
+    <code>DRIVER</code>; <code>inventory.quantity_in_stock</code> is constrained to be non-negative;
+    <code>sale_product.quantity</code> must be positive; and <code>stock_movement.movement_type</code> is
+    constrained to one of <code>STOCK_IN</code>, <code>ADJUSTMENT</code>, <code>SALE</code>, <code>REFUND</code>.
+    Supporting indexes were added on frequently filtered columns such as <code>sale_date</code>,
+    <code>employee_id</code>, <code>customer_id</code>, <code>product.category</code>, <code>product.sku</code>,
+    and the timestamp columns of <code>stock_movement</code> and <code>audit_log</code>, to keep reporting and
+    audit queries performant as data volume grows.
+  </p>
+
+  <h2 id="sec4-4">4.4 API Design</h2>
+  <p>
+    The backend exposes a versionless, resource-oriented REST API rooted at <code>/api</code>, documented
+    automatically via springdoc-openapi and browsable through Swagger UI. Authentication endpoints
+    (<code>/api/auth/login</code>, <code>/api/auth/change-password</code>, <code>/api/auth/me</code>) issue and
+    validate JWTs; resource endpoints for products, inventory, sales, customers, employees, reports and audit
+    logs follow conventional REST semantics (GET for retrieval, POST for creation, PUT for update, DELETE for
+    removal), each guarded by the RBAC rules described in Section 3.5 and enforced through Spring Security
+    <code>requestMatchers</code> configured with <code>hasRole(...)</code> and <code>hasAnyRole(...)</code>
+    predicates. A full endpoint reference is provided in Appendix A.
+  </p>
+
+  <h2 id="sec4-5">4.5 Process Design — The Sale Transaction</h2>
+  <p>
+    The sale transaction is the most business-critical process in the system, since it must remain consistent
+    even under concurrent access by multiple cashiers. Figure 4.3 traces the full lifecycle of a sale from the
+    point-of-sale UI through to database commit, highlighting the atomic nature of the operation: inventory
+    availability is checked, stock is decremented, a financial record is created, loyalty points are updated,
+    and an audit log entry is appended — all within a single backend service-layer transaction, so that a
+    failure at any step rolls back the entire sale rather than leaving inconsistent partial state.
+  </p>
+  <figure>
+    <div class="diagram-box">
+      <pre class="mermaid">
+sequenceDiagram
+    actor C as Cashier
+    participant UI as POS UI (React)
+    participant API as Spring Boot API
+    participant SEC as JWT Filter
+    participant SVC as SaleService
+    participant DB as Database
+
+    C->>UI: Select products & payment method
+    UI->>API: POST /api/sales (JWT bearer token)
+    API->>SEC: Validate JWT and role
+    SEC-->>API: Authorized (MANAGER / CASHIER / SALES_ASSISTANT)
+    API->>SVC: createSale(request)
+    SVC->>DB: Check inventory availability
+    DB-->>SVC: Stock OK
+    SVC->>DB: Insert SALES + SALE_PRODUCT rows
+    SVC->>DB: Decrement INVENTORY, insert STOCK_MOVEMENT
+    SVC->>DB: Insert FINANCIAL_RECORD (SALE)
+    SVC->>DB: Update CUSTOMER loyalty_points
+    SVC->>DB: Insert AUDIT_LOG entry
+    DB-->>SVC: Commit transaction
+    SVC-->>API: SaleResponse
+    API-->>UI: 201 Created + receipt data
+    UI-->>C: Display printable receipt
+      </pre>
+    </div>
+    <figcaption><b>Figure 4.3.</b> Sequence diagram — the sale transaction lifecycle.</figcaption>
+  </figure>
+
+  <h2 id="sec4-6">4.6 User Interface and Experience Design</h2>
+  <p>
+    The frontend was designed around three UX principles suited to a retail-counter environment: (1)
+    <em>speed of the common path</em> — the point-of-sale screen minimises clicks between selecting a product and
+    completing a sale; (2) <em>legibility under varied lighting and screen sizes</em> — a persisted light/dark
+    theme toggle allows staff to choose the mode most comfortable for their workspace; and (3)
+    <em>accessibility to francophone and anglophone staff</em> — an English/French language toggle sits alongside
+    the theme switch on every screen. Typography, spacing and colour follow a consistent Tailwind-based design
+    system, and navy/orange brand accents (matching this thesis document’s own colour scheme) are used sparingly
+    to highlight primary actions and alerts (e.g., low-stock warnings) without overwhelming the interface.
+  </p>
+</section>
+
+<!-- ============================================================ -->
+<!-- CHAPTER 5 -->
+<!-- ============================================================ -->
+<section class="chapter" id="ch5">
+  <div class="chapter-kicker">Chapter Five</div>
+  <h1>5. Implementation</h1>
+
+  <h2 id="sec5-1">5.1 Development Environment and Tools</h2>
+  <p>
+    Development was carried out on Windows using Visual Studio Code and Cursor as primary editors, Git for
+    version control, and GitHub Actions for continuous integration (building and testing both backend and
+    frontend on every push). The backend was built with Maven and run locally under JDK 17, using either the
+    bundled H2 file database (<code>dev</code> Spring profile, port 8081) for fast iteration without installing
+    PostgreSQL, or a Dockerised/local PostgreSQL instance (default profile, port 8080) for production-like
+    testing. The frontend was developed with Vite’s hot-module-reloading dev server against
+    <code>http://localhost:3000</code>, proxying API calls to whichever backend port was active.
+  </p>
+
+  <h2 id="sec5-2">5.2 Backend Implementation</h2>
+  <p>
+    The Spring Boot backend is organised into feature packages that mirror the domain model: <code>auth</code>,
+    <code>admin</code>, <code>employee</code>, <code>product</code>, <code>inventory</code>, <code>sales</code>,
+    <code>customer</code>, <code>finance</code>, <code>report</code>, <code>audit</code>, and <code>common</code>
+    (shared exceptions, enums and entity base classes), with cross-cutting concerns centralised in a
+    <code>config</code> package. Authentication is implemented with the JJWT 0.12.6 library: on successful login,
+    <code>JwtService</code> issues a signed token embedding the subject’s username and role claim; every
+    subsequent request passes through <code>JwtAuthFilter</code>, which validates the token’s signature and
+    expiry and populates the Spring Security context with a <code>UserPrincipal</code> carrying the resolved
+    authority. <code>SecurityConfig</code> then applies the RBAC rules from Table 3.3 declaratively using
+    <code>requestMatchers(...).hasRole(...)</code> / <code>hasAnyRole(...)</code> chains, which is also where the
+    rule denying Admin access to <code>POST /api/sales</code> is enforced (the matcher for that route only grants
+    <code>MANAGER</code>, <code>CASHIER</code> and <code>SALES_ASSISTANT</code>). Passwords for both the
+    <code>app_admin</code> and <code>employee</code> tables are hashed with BCrypt before storage; no plaintext
+    password is ever persisted.
+  </p>
+  <p>
+    Business logic lives in service classes (e.g., <code>SaleService</code> — implemented as part of the
+    <code>sales</code> package — <code>InventoryService</code>, <code>CustomerService</code>,
+    <code>ReportService</code>, <code>AuditService</code>) annotated with Spring’s <code>@Transactional</code>
+    where multiple related writes must succeed or fail together, most notably the sale-creation flow described
+    in Section 4.5. Controllers remain thin, delegating validation (via <code>spring-boot-starter-validation</code>
+    annotations on request DTOs) and business rules to the service layer, and repositories are declared as
+    Spring Data JPA interfaces extending <code>JpaRepository</code>, giving type-safe CRUD and derived-query
+    methods without hand-written SQL for the majority of operations. Global error handling is centralised in a
+    <code>GlobalExceptionHandler</code> that maps domain exceptions (<code>BusinessException</code>,
+    <code>ResourceNotFoundException</code>) to structured JSON error responses (<code>ApiError</code>), giving the
+    frontend consistent, parseable error payloads.
+  </p>
+
+  <h2 id="sec5-3">5.3 Database Migration Strategy</h2>
+  <p>
+    Schema evolution is managed exclusively through Flyway, with each change captured as an immutable, numbered
+    SQL migration under <code>backend/src/main/resources/db/migration</code>. This guarantees that every
+    environment — a developer’s laptop running H2, a Dockerised PostgreSQL container, or a production Supabase
+    database — converges on an identical schema simply by starting the application, since Flyway applies any
+    outstanding migrations automatically at boot. Table 5.1 summarises the four migrations implemented for this
+    project.
+  </p>
+  <table class="data">
+    <caption>Table 5.1 — Flyway database migration versions</caption>
+    <thead><tr><th style="width:60px;">Version</th><th>File</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td>V1</td><td><code>V1__init.sql</code></td><td>Creates the initial schema: <code>app_admin</code>, <code>customer</code>, <code>employee</code>, <code>product</code>, <code>inventory</code>, <code>sales</code>, <code>sale_product</code>, <code>financial_record</code>, plus indexes and CHECK constraints on role, status, quantity and transaction type.</td></tr>
+      <tr><td>V2</td><td><code>V2__seed.sql</code></td><td>Seeds one Admin, four employees (one per role), four customers, sixteen hardware products across six categories, matching inventory rows, and six historical/demo sales spanning the previous and current month, with associated financial records and loyalty-point awards.</td></tr>
+      <tr><td>V3</td><td><code>V3__extra_users_customers.sql</code></td><td>Adds five additional staff accounts (bringing role coverage to Manager ×2, Cashier ×3, Sales Assistant ×2, Driver ×2) and eight additional customers, growing the demo dataset to nine employees and twelve customers.</td></tr>
+      <tr><td>V4</td><td><code>V4__professional_features.sql</code></td><td>Introduces “professional” features on top of the base schema: a <code>sku</code> column on <code>product</code> (backfilled as <code>BI-####</code>), a <code>payment_method</code> column on <code>sales</code> (default <code>CASH</code>), a soft-delete <code>deleted_at</code> column on <code>customer</code>, a new <code>stock_movement</code> table (STOCK_IN / ADJUSTMENT / SALE / REFUND), and a new <code>audit_log</code> table capturing actor, action, entity and detail for every sensitive operation.</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="sec5-4">5.4 Frontend Implementation</h2>
+  <p>
+    The React 19 frontend is structured as a component-driven single-page application built with Vite and
+    written entirely in TypeScript for compile-time type safety across API request/response shapes. Server
+    state (products, inventory, sales, customers, employees, reports) is managed through TanStack Query, which
+    provides caching, background refetching and optimistic-update primitives, reducing the amount of hand-rolled
+    loading/error state throughout the UI. Client-side navigation between role-specific dashboards, the
+    point-of-sale screen, inventory, customers, employees, reports and the audit log is handled by React Router
+    7. The visual component layer follows a shadcn-style pattern: small, composable primitives (dialog, dropdown
+    menu, label, select, toast) are built on top of unstyled, accessible Radix UI primitives and styled with
+    Tailwind CSS 4 utility classes, with variant handling delegated to <code>class-variance-authority</code> and
+    class-name merging handled by <code>tailwind-merge</code>/<code>clsx</code>. Icons are drawn from
+    <code>lucide-react</code>, transient notifications use <code>sonner</code>, and date formatting/parsing
+    (e.g., for sales-date filters) uses <code>date-fns</code>.
+  </p>
+
+  <h2 id="sec5-5">5.5 Key Feature Implementation</h2>
+  <p><strong>Inventory and SKU codes.</strong> Every product is assigned a stable SKU of the form
+  <code>BI-####</code> (a four-digit, zero-padded product identifier prefixed with the store’s initials),
+  generated during the V4 migration and displayed throughout the inventory and point-of-sale screens for fast
+  visual lookup (see Figure 7.5). Inventory rows expose both the current quantity and a reorder level; the
+  backend flags a product as “low stock” whenever <code>quantity_in_stock &lt;= reorder_level</code>, which
+  drives both the dashboard low-stock counter and the stock-status chart in Chapter 7.</p>
+  <p><strong>Point of sale and payment methods.</strong> The POS screen (Figure 7.12) allows an authorised
+  Cashier, Sales Assistant or Manager to build a cart of products, optionally attach a registered customer, and
+  select a payment method of CASH, MOMO or BANK. These payment methods are recorded as metadata on the
+  <code>sales</code> row for reporting and reconciliation purposes; the project deliberately does not integrate a
+  live mobile-money payment gateway, since such integration requires a merchant agreement with a telecom
+  operator that falls outside the scope of an academic project (see Section 1.4).</p>
+  <p><strong>Loyalty points.</strong> On each completed sale associated with a registered customer, the backend
+  awards loyalty points at a configurable rate exposed through the <code>LOYALTY_POINTS_PER_1000_RWF</code>
+  environment property (defaulting to one point per 1,000 RWF spent), implemented through a dedicated
+  <code>LoyaltyProperties</code> configuration class bound at startup.</p>
+  <p><strong>Soft-deleted customers.</strong> Deleting a customer does not remove their row from the database;
+  instead, a <code>deleted_at</code> timestamp is set, hiding the customer from active listings while preserving
+  full referential integrity for their historical sales — a deliberate trade-off favouring auditability over
+  literal deletion.</p>
+  <p><strong>Stock movements and audit log.</strong> Every inventory-affecting event (a sale, a refund, a manual
+  stock-in, or an ad-hoc adjustment) is recorded as a row in <code>stock_movement</code>, giving a full, ordered
+  history per product. In parallel, an <code>AuditService</code> writes a row to <code>audit_log</code> for every
+  security- or business-relevant action, capturing the acting username, role, action name, entity type/ID, and a
+  free-text detail string, queryable by Admin and Manager through the audit module (Figure 7.9).</p>
+  <p><strong>Reporting.</strong> The <code>report</code> package aggregates data into daily, monthly, inventory
+  valuation, transaction-ledger, and dashboard reports, each exportable to CSV via OpenCSV or to PDF via OpenPDF,
+  giving management a printable or spreadsheet-ready artefact without needing direct database access.</p>
+
+  <h2 id="sec5-6">5.6 Internationalisation and Theming</h2>
+  <p>
+    Bilingual support is implemented through a custom <code>useI18n</code> React hook and an
+    <code>app-settings</code> component that expose an EN/FR toggle alongside a light/dark theme toggle on every
+    screen, with both preferences persisted in the browser so that a returning user’s choices are remembered
+    across sessions. This keeps the interface approachable for both anglophone and francophone staff without
+    requiring a full page reload when switching languages.
+  </p>
+
+  <h2 id="sec5-7">5.7 Implementation Challenges</h2>
+  <p>
+    Three implementation challenges are worth documenting. First, ensuring atomicity of the sale transaction
+    (Section 4.5) across four related tables required careful use of Spring’s declarative transaction management
+    to avoid partial writes under failure. Second, supporting three interchangeable database backends
+    (PostgreSQL, H2, Supabase) demanded SQL that avoided vendor-specific syntax in Flyway migrations, resolved by
+    sticking to ANSI-compatible DDL and the <code>flyway-database-postgresql</code> module only where genuinely
+    PostgreSQL-specific behaviour was required. Third, encoding the RBAC matrix (Table 3.3) directly and legibly
+    into Spring Security’s fluent configuration API — rather than scattering ad-hoc permission checks across
+    controllers — required iterating on the ordering and specificity of <code>requestMatchers</code> rules so
+    that more specific rules (e.g., a particular HTTP verb on a particular path) correctly took precedence over
+    broader ones.
+  </p>
+</section>
+
+<!-- ============================================================ -->
+<!-- CHAPTER 6 -->
+<!-- ============================================================ -->
+<section class="chapter" id="ch6">
+  <div class="chapter-kicker">Chapter Six</div>
+  <h1>6. Testing and Quality Assurance</h1>
+
+  <h2 id="sec6-1">6.1 Testing Strategy</h2>
+  <p>
+    Testing followed a layered strategy aligned with the system’s architecture: backend unit and integration
+    tests validated service-layer business rules and security configuration in isolation from the UI; frontend
+    component and hook tests validated rendering and state-management logic; and manual, scenario-based testing
+    validated end-to-end workflows (login, POS checkout, refund, stock-in, report export) against each of the
+    five defined roles, directly exercising the RBAC matrix from Table 3.3.
+  </p>
+
+  <h2 id="sec6-2">6.2 Test Matrix and Coverage</h2>
+  <table class="data">
+    <caption>Table 6.1 — Test matrix and coverage summary</caption>
+    <thead><tr><th>Module</th><th>Test Type</th><th>Tooling</th><th>Representative Cases</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr><td>Authentication</td><td>Unit / Integration</td><td>Spring Boot Test, Spring Security Test</td><td>Valid/invalid login, expired token, must-change-password flow</td><td>Pass</td></tr>
+      <tr><td>RBAC enforcement</td><td>Integration</td><td>Spring Security Test (mock users per role)</td><td>Admin blocked from <code>POST /api/sales</code>; Cashier blocked from employee management</td><td>Pass</td></tr>
+      <tr><td>Sale transaction</td><td>Unit / Integration</td><td>JUnit 5, H2 in-memory</td><td>Stock decrement, insufficient-stock rejection, loyalty point award, audit entry created</td><td>Pass</td></tr>
+      <tr><td>Refund flow</td><td>Integration</td><td>JUnit 5, H2</td><td>Inventory restored, REFUND financial record created</td><td>Pass</td></tr>
+      <tr><td>Inventory / low stock</td><td>Unit</td><td>JUnit 5</td><td>Low-stock flag correctness at boundary (<code>qty == reorder_level</code>)</td><td>Pass</td></tr>
+      <tr><td>Customer soft-delete</td><td>Integration</td><td>JUnit 5, H2</td><td>Soft-deleted customer hidden from list, sales history intact</td><td>Pass</td></tr>
+      <tr><td>Reports (CSV/PDF)</td><td>Manual</td><td>Manual export &amp; inspection</td><td>Daily/monthly/inventory/transaction export correctness</td><td>Pass</td></tr>
+      <tr><td>Frontend components</td><td>Unit</td><td>Vitest, Testing Library, jsdom</td><td>Form validation, table rendering, toast triggers</td><td>Pass</td></tr>
+      <tr><td>Linting / type-checking</td><td>Static analysis</td><td>ESLint 9, TypeScript 5</td><td>Zero blocking lint errors, strict TS compilation</td><td>Pass</td></tr>
+      <tr><td>End-to-end UAT</td><td>Manual</td><td>Browser walkthrough per role</td><td>Full POS-to-receipt flow; audit log correctness; i18n/theme persistence</td><td>Pass</td></tr>
+      <tr><td>CI pipeline</td><td>Automated</td><td>GitHub Actions</td><td>Maven build/test on backend, npm build/lint/test on frontend, on every push</td><td>Pass</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="sec6-3">6.3 Automated Testing Tools</h2>
+  <p>
+    Backend automated tests were written with JUnit 5 and Spring Boot Test, using an in-memory H2 database
+    profile to avoid depending on an external PostgreSQL instance during CI runs, with Spring Security Test used
+    to simulate authenticated principals of each role without needing to obtain a real JWT for every test case.
+    Frontend automated tests were written with Vitest and React Testing Library, executed in a jsdom environment
+    to validate component behaviour without a real browser. Both suites are wired into a GitHub Actions workflow
+    that runs on every push and pull request, giving continuous, free-of-charge regression coverage.
+  </p>
+
+  <h2 id="sec6-4">6.4 Manual and User Acceptance Testing</h2>
+  <p>
+    Beyond automated coverage, each of the five roles was manually walked through their permitted (and, where
+    relevant, forbidden) actions using the seeded demo accounts listed in Appendix B: logging in, viewing the
+    dashboard, attempting restricted actions to confirm they are correctly denied with an HTTP 403 response, and
+    completing at least one full happy-path workflow relevant to that role (e.g., a Cashier completing a sale and
+    printing a receipt, or a Manager processing a refund). This manual acceptance pass is also where the
+    screenshots presented in Chapter 7 were captured.
+  </p>
+
+  <h2 id="sec6-5">6.5 Summary of Testing Outcomes</h2>
+  <p>
+    All fifteen functional requirements (Table 3.1) were verified as satisfied through the combination of
+    automated and manual tests summarised in Table 6.1. No critical defects remained open at the time of writing;
+    minor UX refinements identified during manual testing (for example, additional inline validation messaging)
+    were resolved iteratively during development rather than deferred, and are therefore not repeated as open
+    issues in Chapter 7.
+  </p>
+</section>
+
+<!-- ============================================================ -->
+<!-- CHAPTER 7 -->
+<!-- ============================================================ -->
+<section class="chapter" id="ch7">
+  <div class="chapter-kicker">Chapter Seven</div>
+  <h1>7. Deployment, Results and Discussion</h1>
+
+  <h2 id="sec7-1">7.1 Deployment Architecture</h2>
+  <p>
+    The completed system was deployed to a free-tier, production-representative cloud stack to demonstrate
+    real-world viability beyond the local development environment. The React frontend is built as a static
+    bundle and hosted on <strong>Vercel</strong>; the Spring Boot backend is packaged as a Docker container and
+    hosted on <strong>Render</strong>, provisioned through a <code>render.yaml</code> Blueprint; and the
+    production database is a managed PostgreSQL instance on <strong>Supabase</strong>. Flyway migrations run
+    automatically against the Supabase database the first time the backend container starts, so no manual
+    database setup step is required beyond supplying connection credentials as environment variables
+    (<code>SUPABASE_DB_URL</code>, <code>SUPABASE_DB_USER</code>, <code>SUPABASE_DB_PASSWORD</code>). Cross-origin
+    access between the Vercel-hosted frontend and the Render-hosted API is controlled through a
+    <code>CORS_ALLOWED_ORIGINS</code> environment variable, and the JWT signing secret is generated automatically
+    by Render at provisioning time rather than being committed to source control. Figure 7.1 illustrates this
+    deployment topology.
+  </p>
+  <figure>
+    <div class="diagram-box">
+      <pre class="mermaid">
+flowchart TB
+    subgraph Internet
+        U["End User Browser"]
+    end
+    subgraph Vercel["Vercel - Frontend Hosting"]
+        FE["React SPA (Static Build)"]
+    end
+    subgraph Render["Render - Backend Hosting (Docker)"]
+        BE["Spring Boot API Container :8080"]
+    end
+    subgraph Supabase["Supabase - Managed PostgreSQL"]
+        PG[("PostgreSQL 17 Database")]
+    end
+
+    U -->|HTTPS| FE
+    FE -->|"REST /api JSON + JWT"| BE
+    BE -->|"JDBC over SSL"| PG
+    BE -->|"Flyway migration on boot"| PG
+      </pre>
+    </div>
+    <figcaption><b>Figure 7.1.</b> Deployment diagram — Vercel, Render and Supabase.</figcaption>
+  </figure>
+  <div class="callout">
+    One practical consequence of using Render’s free tier is that the backend container spins down after a
+    period of inactivity and takes roughly 30 seconds to “cold start” on the next request — an acceptable
+    trade-off for an academic demonstration deployment, but one that would be addressed with a paid always-on
+    tier in a genuine production rollout for Built In Hardware.
+  </div>
+
+  <h2 id="sec7-2">7.2 Live System Metrics</h2>
+  <p>
+    Table 7.1 reports the state of the seeded demonstration dataset used to validate and illustrate the system,
+    matching the figures returned live by the <code>/api/reports/dashboard</code> endpoint and the
+    inventory/customer/employee listing endpoints at the time of evaluation.
+  </p>
+  <table class="data">
+    <caption>Table 7.1 — Live seeded system metrics</caption>
+    <thead><tr><th>Metric</th><th>Value</th></tr></thead>
+    <tbody>
+      <tr><td>Total products in catalogue</td><td>16</td></tr>
+      <tr><td>Total employee accounts</td><td>9 (Manager ×2, Cashier ×3, Sales Assistant ×2, Driver ×2) + 1 Admin</td></tr>
+      <tr><td>Total registered customers</td><td>12</td></tr>
+      <tr><td>Sales recorded this month</td><td>4 sales</td></tr>
+      <tr><td>Revenue this month</td><td>RWF 254,700</td></tr>
+      <tr><td>Products currently at or below reorder level (low stock)</td><td>4 of 16</td></tr>
+      <tr><td>Top-selling product (by revenue)</td><td>Corrugated Iron Sheet 3m — RWF 74,000</td></tr>
+    </tbody>
+  </table>
+  <p>
+    Figures 7.13–7.15 visualise three views of this dataset using Chart.js, rendered client-side directly in this
+    document: the revenue contribution of the top five products, the distribution of staff across the four
+    employee roles (plus the single Admin account), and the current split between healthy and low-stock
+    inventory items.
+  </p>
+
+  <figure>
+    <div class="chart-container"><canvas id="chartTopProducts"></canvas></div>
+    <figcaption><b>Figure 7.13.</b> Top-selling products by revenue (RWF). Data: Corrugated Iron Sheet 3m 74,000; Claw Hammer 500g 36,000; Ridge Cap 3m 24,000; Padlock 40mm Steel 11,000; PVC Elbow 110mm 6,400.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="chart-container" style="height:340px;"><canvas id="chartRoles"></canvas></div>
+    <figcaption><b>Figure 7.14.</b> Employee role distribution across the nine seeded staff accounts plus one Admin (Admin 1, Manager 2, Cashier 3, Sales Assistant 2, Driver 2).</figcaption>
+  </figure>
+
+  <figure>
+    <div class="chart-container" style="height:340px;"><canvas id="chartStock"></canvas></div>
+    <figcaption><b>Figure 7.15.</b> Stock status overview: 12 products “OK”, 4 products flagged “Low Stock” (quantity at or below reorder level), out of 16 total products.</figcaption>
+  </figure>
+
+  <h2 id="sec7-3">7.3 System Walkthrough (Screenshots)</h2>
+  <p>
+    Figures 7.2–7.12 present an illustrated walkthrough of the working system, captured from the deployed
+    instance, following a typical staff journey from the home screen through to a completed sale receipt.
+  </p>
+
+  <figure>
+    <img src="figures/01-home.png" alt="Home screen and role selection">
+    <figcaption><b>Figure 7.2.</b> Home / role selection screen, offering separate entry points for Admin and staff logins, with light/dark theme and EN/FR language controls.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="figures/02-admin-login.png" alt="Admin login screen">
+    <figcaption><b>Figure 7.3.</b> Admin login screen, a dedicated authentication flow distinct from the staff login (FR1).</figcaption>
+  </figure>
+
+  <figure>
+    <img src="figures/03-dashboard.png" alt="Administrator dashboard">
+    <figcaption><b>Figure 7.4.</b> Administrator dashboard summarising sales-today, monthly revenue, low-stock alerts, and top-selling products.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="figures/04-inventory.png" alt="Inventory module showing SKU codes">
+    <figcaption><b>Figure 7.5.</b> Inventory module, listing products with their “BI-” prefixed SKU codes, current stock quantity and reorder level (FR5, FR6).</figcaption>
+  </figure>
+
+  <figure>
+    <img src="figures/05-customers.png" alt="Customers and loyalty points module">
+    <figcaption><b>Figure 7.6.</b> Customers module, showing registered customers with accumulated loyalty points (FR10, FR12).</figcaption>
+  </figure>
+
+  <figure>
+    <img src="figures/06-employees.png" alt="Employee management module">
+    <figcaption><b>Figure 7.7.</b> Employee management module (Admin only), listing staff accounts by role and status (FR4).</figcaption>
+  </figure>
+
+  <figure>
+    <img src="figures/07-reports.png" alt="Reports module">
+    <figcaption><b>Figure 7.8.</b> Reports module, offering daily, monthly, inventory and transaction reports with CSV/PDF export (FR14).</figcaption>
+  </figure>
+
+  <figure>
+    <img src="figures/08-audit.png" alt="Audit log module">
+    <figcaption><b>Figure 7.9.</b> Audit log module (Admin/Manager only), showing a chronological record of sensitive actions across the system (FR13).</figcaption>
+  </figure>
+
+  <figure>
+    <img src="figures/09-sales.png" alt="Sales history module">
+    <figcaption><b>Figure 7.10.</b> Sales history module, listing past transactions with payment method, employee and customer association.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="figures/10-receipt.png" alt="Printable sales receipt">
+    <figcaption><b>Figure 7.11.</b> Printable sales receipt generated immediately after a sale is completed, itemising products, quantities, prices and total in RWF.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="figures/11-pos-new-sale.png" alt="Point of sale new sale screen operated by Cashier Alice Uwase">
+    <figcaption><b>Figure 7.12.</b> Point-of-Sale screen during a new sale, operated here by Cashier Alice Uwase, demonstrating product selection, cart totals and payment-method choice (FR8, FR9).</figcaption>
+  </figure>
+
+  <h2 id="sec7-4">7.4 Discussion of Findings</h2>
+  <p>
+    The evaluation confirms that the system meets its stated objectives (Section 1.3). All fifteen functional
+    requirements were exercised and verified during testing (Chapter 6), and the live metrics in Table 7.1
+    demonstrate that the system behaves correctly under a realistic, if modest, volume of seeded operational
+    data — sixteen products across six categories, twelve customers, nine staff accounts across four roles, and
+    a rolling window of recorded sales. The explicit exclusion of Admin from the sales-recording use case (Table
+    3.3, Figure 3.1) proved straightforward to enforce at the Spring Security configuration level and required
+    no special-casing in the frontend beyond simply not exposing a “New Sale” action to an authenticated Admin
+    session — the backend’s RBAC enforcement is the true source of truth, consistent with defence-in-depth
+    security practice. The three-way interchangeable database configuration (H2 for offline development,
+    Docker/local PostgreSQL for integration testing, Supabase for production) was validated by successfully
+    running the identical Flyway migration set against all three targets without modification, confirming the
+    portability non-functional requirement (Table 3.2).
+  </p>
+
+  <h2 id="sec7-5">7.5 Limitations</h2>
+  <p>
+    Several limitations should be acknowledged. First, payment methods are recorded as metadata only; no live
+    mobile-money or card-payment gateway is integrated, meaning reconciliation against an actual telecom
+    operator’s settlement report would still require a manual step. Second, the Render free-tier cold-start delay
+    described in Section 7.1 would need to be mitigated (via a paid always-on plan or a scheduled keep-alive
+    ping) before genuine day-to-day use at a busy shop counter. Third, the reporting module currently supports a
+    fixed set of report types (daily, monthly, inventory, transaction) rather than an arbitrary, user-defined
+    query builder; more advanced analytics (e.g., seasonal demand forecasting) were deliberately placed out of
+    scope and are discussed as future work in Chapter 8. Finally, load testing was performed only informally
+    against the modest seeded dataset described above; a larger-scale performance study under concurrent
+    multi-cashier load was not conducted within the time constraints of this project.
+  </p>
+</section>
+
+<!-- ============================================================ -->
+<!-- CHAPTER 8 -->
+<!-- ============================================================ -->
+<section class="chapter" id="ch8">
+  <div class="chapter-kicker">Chapter Eight</div>
+  <h1>8. Conclusion and Recommendations</h1>
+
+  <h2 id="sec8-1">8.1 Summary of the Study</h2>
+  <p>
+    This thesis set out to design, implement and evaluate a web-based Operations and Inventory Management System
+    for Built In Hardware, a hardware retail business in Kigali, Rwanda, in order to replace error-prone manual
+    record-keeping with a secure, role-aware, auditable digital platform. Through requirements analysis
+    (Chapter 3), architectural and database design (Chapter 4), full-stack implementation with React 19 and
+    Spring Boot 3.4 (Chapter 5), layered testing (Chapter 6), and a live cloud deployment across Vercel, Render
+    and Supabase (Chapter 7), the study has demonstrated a complete, working system that satisfies all fifteen
+    identified functional requirements and the associated non-functional requirements.
+  </p>
+
+  <h2 id="sec8-2">8.2 Contributions</h2>
+  <p>This project makes the following contributions:</p>
+  <ul class="req-list">
+    <li>A concrete, reproducible reference architecture for a role-aware retail management system suited to the
+      Rwandan SME context, including an explicit and enforced separation between administrative and
+      sales-capable roles.</li>
+    <li>A version-controlled, portable database schema (Flyway V1–V4) validated across three distinct database
+      backends (H2, PostgreSQL, Supabase-hosted PostgreSQL).</li>
+    <li>A working demonstration of core retail features — SKU-coded inventory, multi-method point-of-sale,
+      customer loyalty, soft-deletion, stock-movement history, audit logging, and exportable reporting — built
+      entirely with free and open-source tooling.</li>
+    <li>Evidence, through live deployment on free-tier cloud infrastructure, that a full production-representative
+      hosting stack is achievable for an SME-scale system without recurring licensing costs.</li>
+  </ul>
+
+  <h2 id="sec8-3">8.3 Recommendations for Future Work</h2>
+  <p>Building on the current implementation, the following extensions are recommended for future iterations of the system:</p>
+  <ul class="req-list">
+    <li><strong>Live mobile-money integration</strong> — replacing the recorded-only MoMo payment method with a
+      genuine integration against a telecom mobile-money API, enabling automatic payment confirmation rather than
+      manual entry.</li>
+    <li><strong>Predictive re-ordering</strong> — using historical stock-movement and sales data to forecast
+      demand and suggest re-order quantities automatically, rather than relying solely on a static reorder
+      level.</li>
+    <li><strong>Supplier and procurement module</strong> — extending stock-in beyond a simple quantity increase to
+      a full purchase-order lifecycle with supplier records and delivery tracking.</li>
+    <li><strong>Multi-branch support</strong> — generalising the schema and RBAC model to support several Built
+      In Hardware branches sharing a single deployment, with branch-scoped inventory and reporting.</li>
+    <li><strong>Native mobile companion app</strong> — a lightweight mobile client for the Driver role, providing
+      delivery-route visibility and proof-of-delivery capture in the field.</li>
+    <li><strong>Enhanced analytics dashboard</strong> — richer, interactive Chart.js/D3-based dashboards for
+      Managers, going beyond the fixed report types currently offered.</li>
+  </ul>
+
+  <h2 id="sec8-4">8.4 Concluding Remarks</h2>
+  <p>
+    The Built In Hardware Operations and Inventory Management System demonstrates that a modern, secure,
+    role-aware retail management platform can be designed, built and deployed by a single final-year student
+    within an academic timeframe, using entirely free and open-source technology. Beyond its immediate value to
+    Built In Hardware, the system — and the architectural decisions documented throughout this thesis, in
+    particular the strict separation between administrative and transactional roles — offers a practical,
+    reusable template for other small and medium-sized retail businesses in Rwanda and the wider region seeking
+    to digitise their operations without incurring recurring software licensing costs.
+  </p>
+</section>
+
+<!-- ============================================================ -->
+<!-- REFERENCES -->
+<!-- ============================================================ -->
+<section class="chapter" id="references">
+  <div class="chapter-kicker">References</div>
+  <h1>References</h1>
+  <ol class="refs-list">
+    <li>React core team, “React — the library for web and native user interfaces,” Meta Open Source, 2025. [Online]. Available: https://react.dev</li>
+    <li>Vite core team, “Vite — Next Generation Frontend Tooling,” 2025. [Online]. Available: https://vitejs.dev</li>
+    <li>VMware Tanzu, “Spring Boot Reference Documentation,” Spring Framework Project, v3.4, 2024. [Online]. Available: https://docs.spring.io/spring-boot/</li>
+    <li>VMware Tanzu, “Spring Security Reference Documentation,” Spring Framework Project, 2024. [Online]. Available: https://docs.spring.io/spring-security/</li>
+    <li>Redgate Software, “Flyway Documentation,” 2024. [Online]. Available: https://flywaydb.org/documentation/</li>
+    <li>PostgreSQL Global Development Group, “PostgreSQL 17 Documentation,” 2024. [Online]. Available: https://www.postgresql.org/docs/17/</li>
+    <li>M. Jones, J. Bradley, and N. Sakimura, “JSON Web Token (JWT),” RFC 7519, Internet Engineering Task Force, May 2015.</li>
+    <li>Tailwind Labs, “Tailwind CSS v4 Documentation,” 2025. [Online]. Available: https://tailwindcss.com/docs</li>
+    <li>Mermaid Contributors, “Mermaid — Diagramming and Charting Tool,” 2025. [Online]. Available: https://mermaid.js.org</li>
+    <li>Chart.js Contributors, “Chart.js Documentation,” 2025. [Online]. Available: https://www.chartjs.org/docs/</li>
+    <li>D. F. Ferraiolo and D. R. Kuhn, “Role-Based Access Control,” in <em>Proc. 15th National Computer Security Conference</em>, Baltimore, MD, 1992, pp. 554–563.</li>
+    <li>I. Sommerville, <em>Software Engineering</em>, 10th ed. Boston, MA: Pearson, 2016.</li>
+    <li>OWASP Foundation, “OWASP Top Ten,” 2021. [Online]. Available: https://owasp.org/www-project-top-ten/</li>
+    <li>Vercel Inc., “Vercel Documentation,” 2025. [Online]. Available: https://vercel.com/docs</li>
+    <li>Render Services Inc., “Render Documentation,” 2025. [Online]. Available: https://render.com/docs</li>
+  </ol>
+</section>
+
+<!-- ============================================================ -->
+<!-- APPENDIX A -->
+<!-- ============================================================ -->
+<section class="chapter" id="appendixA">
+  <div class="chapter-kicker">Appendix A</div>
+  <h1>Appendix A — REST API Reference</h1>
+  <p>Table A.1 summarises the primary REST endpoints exposed by the backend under the <code>/api</code> root.
+  Full interactive documentation is generated automatically via springdoc-openapi and served at
+  <code>/swagger-ui</code> on any running instance.</p>
+  <table class="data">
+    <caption>Table A.1 — REST API endpoint reference</caption>
+    <thead><tr><th>Module</th><th>Endpoint(s)</th><th>Access</th></tr></thead>
+    <tbody>
+      <tr><td>Authentication</td><td><code>POST /api/auth/login</code>, <code>POST /api/auth/change-password</code>, <code>GET /api/auth/me</code></td><td>Public login; authenticated for the rest</td></tr>
+      <tr><td>Products</td><td><code>GET/POST/PUT/DELETE /api/products</code></td><td>Read: all roles; Write: Admin only</td></tr>
+      <tr><td>Inventory</td><td><code>GET /api/inventory</code>, <code>PUT /api/inventory/{productId}</code>, <code>GET /api/inventory/low-stock</code>, <code>POST /api/inventory/stock-in</code></td><td>Read: all roles; Write: Admin/Manager</td></tr>
+      <tr><td>Sales</td><td><code>POST /api/sales</code>, <code>GET /api/sales</code>, <code>POST /api/sales/{id}/refund</code></td><td>Create: Manager/Cashier/Sales Assistant (not Admin); Refund: Admin/Manager; Read: Admin/Manager (all), Cashier/Sales Assistant (own)</td></tr>
+      <tr><td>Customers</td><td><code>GET/POST/PUT/DELETE /api/customers</code></td><td>Read: all roles; Create/Update: Admin/Manager/Cashier/Sales Assistant; Delete: Admin/Manager</td></tr>
+      <tr><td>Employees</td><td><code>GET/POST/PUT/DELETE /api/employees</code>, password reset endpoint</td><td>Admin only</td></tr>
+      <tr><td>Reports</td><td><code>GET /api/reports/daily</code>, <code>/monthly</code>, <code>/inventory</code>, <code>/transactions</code>, <code>/dashboard</code>, plus CSV/PDF export variants</td><td>Admin/Manager</td></tr>
+      <tr><td>Audit</td><td><code>GET /api/audit</code></td><td>Admin/Manager</td></tr>
+      <tr><td>Health</td><td><code>GET /api/health</code></td><td>Public</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============================================================ -->
+<!-- APPENDIX B -->
+<!-- ============================================================ -->
+<section class="chapter" id="appendixB">
+  <div class="chapter-kicker">Appendix B</div>
+  <h1>Appendix B — Credentials and Security Note</h1>
+  <p>
+    The following demonstration credentials are used exclusively in the seeded development and evaluation
+    environment described throughout this thesis, and correspond to the accounts created by the Flyway seed
+    migrations (V2 and V3) referenced in Table 5.1.
+  </p>
+  <table class="data">
+    <thead><tr><th>Role</th><th>Username</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Admin</td><td><code>admin</code></td><td>Full administrative access; cannot record sales</td></tr>
+      <tr><td>Manager</td><td><code>manager1</code>, <code>manager2</code></td><td>Sales, inventory, refunds, reports, audit</td></tr>
+      <tr><td>Cashier</td><td><code>cashier1</code>, <code>cashier2</code>, <code>cashier3</code></td><td>Point-of-sale operations</td></tr>
+      <tr><td>Sales Assistant</td><td><code>sales1</code>, <code>sales2</code></td><td>Sales and customer management</td></tr>
+      <tr><td>Driver</td><td><code>driver1</code>, <code>driver2</code></td><td>Limited, delivery-focused visibility</td></tr>
+    </tbody>
+  </table>
+  <div class="callout warn">
+    <strong>⚠ Security warning.</strong> The demonstration passwords associated with the accounts above are
+    published in this project’s development documentation for evaluation purposes only. They must
+    <strong>never</strong> be reused in a genuine production deployment. Before any real-world rollout at Built
+    In Hardware, all default credentials must be rotated, strong unique passwords must be enforced for every
+    account, the JWT signing secret must be generated freshly per environment (as already practiced on the
+    Render production deployment), and administrative access to the live database (e.g., the Supabase project)
+    must be restricted to authorised personnel only.
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- APPENDIX C -->
+<!-- ============================================================ -->
+<section class="chapter" id="appendixC">
+  <div class="chapter-kicker">Appendix C</div>
+  <h1>Appendix C — Screenshot Index</h1>
+  <p>Table C.1 maps each figure number used in Chapter 7 to its underlying image file, for traceability.</p>
+  <table class="data">
+    <caption>Table C.1 — Screenshot index</caption>
+    <thead><tr><th>Figure</th><th>File</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>Figure 7.2</td><td><code>figures/01-home.png</code></td><td>Home / role selection</td></tr>
+      <tr><td>Figure 7.3</td><td><code>figures/02-admin-login.png</code></td><td>Admin login</td></tr>
+      <tr><td>Figure 7.4</td><td><code>figures/03-dashboard.png</code></td><td>Admin dashboard</td></tr>
+      <tr><td>Figure 7.5</td><td><code>figures/04-inventory.png</code></td><td>Inventory with SKUs (BI- prefix)</td></tr>
+      <tr><td>Figure 7.6</td><td><code>figures/05-customers.png</code></td><td>Customers &amp; loyalty</td></tr>
+      <tr><td>Figure 7.7</td><td><code>figures/06-employees.png</code></td><td>Employee management</td></tr>
+      <tr><td>Figure 7.8</td><td><code>figures/07-reports.png</code></td><td>Reports module</td></tr>
+      <tr><td>Figure 7.9</td><td><code>figures/08-audit.png</code></td><td>Audit log</td></tr>
+      <tr><td>Figure 7.10</td><td><code>figures/09-sales.png</code></td><td>Sales history</td></tr>
+      <tr><td>Figure 7.11</td><td><code>figures/10-receipt.png</code></td><td>Sales receipt</td></tr>
+      <tr><td>Figure 7.12</td><td><code>figures/11-pos-new-sale.png</code></td><td>POS — new sale (Cashier Alice Uwase)</td></tr>
+    </tbody>
+  </table>
+</section>
+
+</div><!-- /.page-shell -->
+
+<script>
+  window.mermaid && window.mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
+
+  document.addEventListener('DOMContentLoaded', function () {
+    var navy = '#1e3a5f', navyLight = '#2d527d', orange = '#ea580c';
+
+    var topProductsCtx = document.getElementById('chartTopProducts');
+    if (topProductsCtx && window.Chart) {
+      new Chart(topProductsCtx, {
+        type: 'bar',
+        data: {
+          labels: ['Corrugated Iron Sheet 3m', 'Claw Hammer 500g', 'Ridge Cap 3m', 'Padlock 40mm Steel', 'PVC Elbow 110mm'],
+          datasets: [{
+            label: 'Revenue (RWF)',
+            data: [74000, 36000, 24000, 11000, 6400],
+            backgroundColor: [navy, navyLight, orange, '#f59e0b', '#94a3b8'],
+            borderRadius: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false }, title: { display: false } },
+          scales: { y: { beginAtZero: true, ticks: { callback: function (v) { return 'RWF ' + v.toLocaleString(); } } } }
+        }
+      });
+    }
+
+    var rolesCtx = document.getElementById('chartRoles');
+    if (rolesCtx && window.Chart) {
+      new Chart(rolesCtx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Admin', 'Manager', 'Cashier', 'Sales Assistant', 'Driver'],
+          datasets: [{
+            data: [1, 2, 3, 2, 2],
+            backgroundColor: [orange, navy, navyLight, '#0ea5e9', '#94a3b8']
+          }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+      });
+    }
+
+    var stockCtx = document.getElementById('chartStock');
+    if (stockCtx && window.Chart) {
+      new Chart(stockCtx, {
+        type: 'pie',
+        data: {
+          labels: ['OK', 'Low Stock'],
+          datasets: [{
+            data: [12, 4],
+            backgroundColor: [navy, orange]
+          }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+      });
+    }
+  });
+</script>
+
+</body>
+</html>

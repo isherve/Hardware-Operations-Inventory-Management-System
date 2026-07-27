@@ -16,6 +16,10 @@ export interface Product {
   description?: string;
   category: string;
   sku?: string;
+  brand?: string;
+  unit?: string;
+  shelfLocation?: string;
+  manufacturerCode?: string;
   unitPrice: number;
   quantityInStock?: number;
   reorderLevel?: number;
@@ -26,7 +30,12 @@ export interface InventoryItem {
   inventoryId: number;
   productId: number;
   productName: string;
+  description?: string;
   sku?: string;
+  brand?: string;
+  unit?: string;
+  shelfLocation?: string;
+  manufacturerCode?: string;
   category: string;
   unitPrice: number;
   quantityInStock: number;

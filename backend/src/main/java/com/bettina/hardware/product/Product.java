@@ -35,6 +35,23 @@ public class Product extends AuditableEntity {
     @Column(length = 50)
     private String sku;
 
+    /** Brand / make shown after scan (e.g. Dulux, Built In). */
+    @Column(length = 100)
+    private String brand;
+
+    /** Sell unit: PCS, M, L, KG, BAG, BOX. */
+    @Column(length = 20)
+    @Builder.Default
+    private String unit = "PCS";
+
+    /** Shelf / bin location in the store. */
+    @Column(name = "shelf_location", length = 50)
+    private String shelfLocation;
+
+    /** Optional manufacturer / supplier barcode (EAN/UPC/GTIN). */
+    @Column(name = "manufacturer_code", length = 50)
+    private String manufacturerCode;
+
     @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Inventory inventory;
 }

@@ -13,6 +13,10 @@ public class ProductResponse {
     private String description;
     private String category;
     private String sku;
+    private String brand;
+    private String unit;
+    private String shelfLocation;
+    private String manufacturerCode;
     private BigDecimal unitPrice;
     private Integer quantityInStock;
     private Integer reorderLevel;

@@ -1,0 +1,46 @@
+﻿{
+    "customerCount":  12,
+    "dashboard":  {
+                      "salesToday":  0,
+                      "salesCountToday":  0,
+                      "salesThisMonth":  254700.00,
+                      "salesCountThisMonth":  4,
+                      "lowStockCount":  4,
+                      "revenueToday":  0,
+                      "topProducts":  [
+                                          {
+                                              "productId":  1,
+                                              "productName":  "Corrugated Iron Sheet 3m",
+                                              "quantitySold":  4,
+                                              "revenue":  74000.00
+                                          },
+                                          {
+                                              "productId":  14,
+                                              "productName":  "Claw Hammer 500g",
+                                              "quantitySold":  3,
+                                              "revenue":  36000.00
+                                          },
+                                          {
+                                              "productId":  3,
+                                              "productName":  "Ridge Cap 3m",
+                                              "quantitySold":  2,
+                                              "revenue":  24000.00
+                                          },
+                                          {
+                                              "productId":  8,
+                                              "productName":  "Padlock 40mm Steel",
+                                              "quantitySold":  2,
+                                              "revenue":  11000.00
+                                          },
+                                          {
+                                              "productId":  10,
+                                              "productName":  "PVC Elbow 110mm",
+                                              "quantitySold":  2,
+                                              "revenue":  6400.00
+                                          }
+                                      ]
+                  },
+    "employeeCount":  9,
+    "lowStock":  4,
+    "inventoryCount":  16
+}
