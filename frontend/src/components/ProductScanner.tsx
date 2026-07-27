@@ -3,6 +3,7 @@ import { Html5Qrcode } from "html5-qrcode";
 import { toast } from "sonner";
 import { api, ApiClientError } from "@/lib/api";
 import type { Product } from "@/types";
+import { extractProductCode } from "@/components/ProductCodes";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -31,18 +32,18 @@ export function ProductScanner({
   const lastScanRef = useRef({ code: "", at: 0 });
 
   const lookup = async (raw: string) => {
-    const normalized = raw.trim();
-    if (!normalized) return;
+    const productCode = extractProductCode(raw);
+    if (!productCode) return;
 
     const now = Date.now();
-    if (lastScanRef.current.code === normalized && now - lastScanRef.current.at < 1500) {
+    if (lastScanRef.current.code === productCode && now - lastScanRef.current.at < 1500) {
       return;
     }
-    lastScanRef.current = { code: normalized, at: now };
+    lastScanRef.current = { code: productCode, at: now };
 
     setLoading(true);
     try {
-      const product = await api.get<Product>(`/products/lookup?code=${encodeURIComponent(normalized)}`);
+      const product = await api.get<Product>(`/products/lookup?code=${encodeURIComponent(productCode)}`);
       onProduct(product);
       setCode("");
       toast.success(`Found: ${product.productName}`);
@@ -144,7 +145,7 @@ export function ProductScanner({
         </div>
       )}
       <p className="text-xs text-slate-500">
-        Works with USB/handheld scanners (they type the code and press Enter), phone camera QR/barcode, or manual SKU entry (e.g. BI-0001).
+        QR opens the product card page. USB scanners, camera, or typing SKU (e.g. BI-0001) all work.
       </p>
     </div>
   );

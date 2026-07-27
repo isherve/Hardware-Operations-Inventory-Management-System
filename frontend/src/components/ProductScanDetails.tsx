@@ -3,7 +3,7 @@ import type { Product } from "@/types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ProductCodeLabel, PrintableProductLabel } from "@/components/ProductCodes";
+import { ProductCodeLabel, PrintableProductLabel, productPublicUrl, productScanCode } from "@/components/ProductCodes";
 
 type Props = {
   product: Product;
@@ -17,31 +17,30 @@ export function ProductScanDetails({ product, onClose, onAddToSale, showPrint = 
   const handlePrint = () => {
     const w = window.open("", "_blank", "width=420,height=640");
     if (!w) return;
-    const root = document.createElement("div");
-    root.id = "print-root";
-    // Render via simple HTML since we can't easily mount React in new window
-    const code = (product.sku || product.manufacturerCode || `BI-${String(product.productId).padStart(4, "0")}`).toUpperCase();
+    const code = productScanCode(product);
+    const qrUrl = productPublicUrl(product);
     w.document.write(`<!DOCTYPE html><html><head><title>Label ${code}</title>
       <style>
-        body{font-family:system-ui,sans-serif;padding:24px;color:#0f172a}
-        .box{width:300px;margin:0 auto;border:1px solid #cbd5e1;border-radius:8px;padding:16px;text-align:center}
-        h1{font-size:14px;margin:0 0 4px;color:#c2410c;text-transform:uppercase;letter-spacing:.06em}
-        h2{font-size:18px;margin:8px 0}
-        .meta{font-size:12px;color:#64748b}
-        .price{font-size:16px;font-weight:700;margin:8px 0}
-        .code{font-family:ui-monospace,monospace;font-size:13px;margin-top:12px}
-        img{margin:8px auto;display:block}
-        @media print{body{padding:0}.box{border:1px solid #000}}
+        body{font-family:system-ui,sans-serif;padding:24px;color:#0f172a;background:#f1f5f9}
+        .box{width:300px;margin:0 auto;border:1px solid #e2e8f0;border-radius:16px;padding:28px 24px;text-align:center;background:#fff}
+        h1{font-size:13px;margin:0;color:#ea580c;text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+        h2{font-size:22px;margin:16px 0 8px;color:#0f172a}
+        .meta{font-size:13px;color:#64748b;margin:4px 0}
+        .price{font-size:20px;font-weight:700;margin:16px 0;color:#0f172a}
+        .code{font-family:ui-monospace,monospace;font-size:15px;font-weight:600;margin-top:12px}
+        img{margin:16px auto;display:block}
+        .desc{font-size:13px;color:#64748b;text-align:left;margin-top:16px}
+        @media print{body{padding:0;background:#fff}.box{border:1px solid #cbd5e1}}
       </style></head><body>
       <div class="box">
         <h1>Built In Hardware</h1>
         <h2>${escapeHtml(product.productName)}</h2>
-        <p class="meta">${escapeHtml([product.brand, product.category, product.unit].filter(Boolean).join(" · "))}</p>
+        <p class="meta">${escapeHtml([product.brand || "Built In", product.category, product.unit || "PCS"].filter(Boolean).join(" · "))}</p>
         ${product.shelfLocation ? `<p class="meta">Shelf: <strong>${escapeHtml(product.shelfLocation)}</strong></p>` : ""}
         <p class="price">${formatRwf(product.unitPrice)}</p>
-        <img alt="QR" width="120" height="120" src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(code)}" />
+        <img alt="QR" width="160" height="160" src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(qrUrl)}" />
         <p class="code">${escapeHtml(code)}</p>
-        ${product.description ? `<p class="meta" style="margin-top:12px;text-align:left">${escapeHtml(product.description)}</p>` : ""}
+        ${product.description ? `<p class="desc">${escapeHtml(product.description)}</p>` : ""}
       </div>
       <script>window.onload=()=>{window.print();}</script>
       </body></html>`);

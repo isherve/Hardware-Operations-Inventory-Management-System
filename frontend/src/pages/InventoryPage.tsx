@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { api, ApiClientError } from "@/lib/api";
@@ -12,10 +13,10 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ProductScanner } from "@/components/ProductScanner";
-import { ProductScanDetails } from "@/components/ProductScanDetails";
-import { ProductCodeLabel } from "@/components/ProductCodes";
+import { productScanCode } from "@/components/ProductCodes";
 
 export default function InventoryPage() {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const canManageProducts = can(user, "manageProducts");
   const canAdjust = can(user, "adjustInventory");
@@ -25,9 +26,11 @@ export default function InventoryPage() {
   const [showForm, setShowForm] = useState(false);
   const [showStockIn, setShowStockIn] = useState(false);
   const [showScan, setShowScan] = useState(true);
-  const [scanned, setScanned] = useState<Product | null>(null);
-  const [codesProduct, setCodesProduct] = useState<Product | null>(null);
   const qc = useQueryClient();
+
+  const openProductCard = (product: Product) => {
+    navigate(`/p/${encodeURIComponent(productScanCode(product))}`);
+  };
 
   const { data: inventory = [], isLoading } = useQuery({
     queryKey: ["inventory"],
@@ -115,27 +118,11 @@ export default function InventoryPage() {
           <CardHeader>
             <CardTitle>Scan barcode / QR</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <ProductScanner onProduct={setScanned} />
-            {scanned && (
-              <ProductScanDetails
-                product={scanned}
-                onClose={() => setScanned(null)}
-                showPrint
-              />
-            )}
-          </CardContent>
-        </Card>
-      )}
-
-      {codesProduct && (
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0">
-            <CardTitle>Codes — {codesProduct.productName}</CardTitle>
-            <Button variant="outline" size="sm" onClick={() => setCodesProduct(null)}>Close</Button>
-          </CardHeader>
           <CardContent>
-            <ProductCodeLabel product={codesProduct} />
+            <ProductScanner
+              onProduct={openProductCard}
+              placeholder="Scan to open product card (e.g. BI-0012)"
+            />
           </CardContent>
         </Card>
       )}
@@ -228,20 +215,9 @@ export default function InventoryPage() {
                         )}
                       </td>
                       <td className="p-3">
-                        <div className="flex gap-1">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => {
-                              const p = toProduct(item);
-                              setCodesProduct(p);
-                              setScanned(p);
-                              setShowScan(true);
-                            }}
-                          >
-                            View
-                          </Button>
-                        </div>
+                        <Button size="sm" variant="outline" onClick={() => openProductCard(toProduct(item))}>
+                          View
+                        </Button>
                       </td>
                       {canAdjust && (
                         <td className="p-3">

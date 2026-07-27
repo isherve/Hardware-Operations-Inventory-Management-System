@@ -14,6 +14,7 @@ import CustomersPage from "@/pages/CustomersPage";
 import EmployeesPage from "@/pages/EmployeesPage";
 import ReportsPage from "@/pages/ReportsPage";
 import AuditPage from "@/pages/AuditPage";
+import ProductCardPage from "@/pages/ProductCardPage";
 
 export default function App() {
   return (
@@ -22,6 +23,8 @@ export default function App() {
       <Route path="/login/admin" element={<AdminLoginPage />} />
       <Route path="/login/user" element={<UserLoginPage />} />
       <Route path="/change-password" element={<ChangePasswordPage />} />
+      {/* Public product card — opened by scanning QR on a product label */}
+      <Route path="/p/:code" element={<ProductCardPage />} />
       <Route element={<DashboardLayout />}>
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/inventory" element={<InventoryPage />} />

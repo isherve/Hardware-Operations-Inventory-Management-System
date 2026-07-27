@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { toast } from "sonner";
 import { api, ApiClientError } from "@/lib/api";
 import { formatRwf } from "@/lib/utils";
@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ProductScanner } from "@/components/ProductScanner";
-import { ProductScanDetails } from "@/components/ProductScanDetails";
+import { productScanCode } from "@/components/ProductCodes";
 
 interface LineItem {
   productId: number;
@@ -22,13 +22,13 @@ interface LineItem {
 
 export default function NewSalePage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const qc = useQueryClient();
   const [customerId, setCustomerId] = useState<string>("");
   const [paymentMethod, setPaymentMethod] = useState("CASH");
   const [lines, setLines] = useState<LineItem[]>([]);
   const [selectedProduct, setSelectedProduct] = useState("");
   const [qty, setQty] = useState("1");
-  const [scanned, setScanned] = useState<Product | null>(null);
 
   const { data: products = [] } = useQuery({
     queryKey: ["products"],
@@ -74,6 +74,16 @@ export default function NewSalePage() {
     setQty("1");
     toast.success(`Added ${product.productName}`);
   };
+
+  // Returning from product card "Add to sale"
+  useEffect(() => {
+    const addId = (location.state as { addProductId?: number } | null)?.addProductId;
+    if (!addId || products.length === 0) return;
+    const product = products.find((p) => p.productId === addId);
+    if (product) addProductLine(product, 1);
+    navigate(location.pathname, { replace: true, state: {} });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [products, location.state]);
 
   const addLine = () => {
     const product = products.find((p) => p.productId === parseInt(selectedProduct));
@@ -138,24 +148,13 @@ export default function NewSalePage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Scan to add</CardTitle>
+          <CardTitle>Scan product</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent>
           <ProductScanner
-            onProduct={(product) => {
-              setScanned(product);
-              addProductLine(product, 1);
-            }}
-            placeholder="Scan barcode/QR to add line (qty 1)"
+            onProduct={(product) => navigate(`/p/${encodeURIComponent(productScanCode(product))}`)}
+            placeholder="Scan QR/barcode to open product card"
           />
-          {scanned && (
-            <ProductScanDetails
-              product={scanned}
-              onClose={() => setScanned(null)}
-              onAddToSale={(p) => addProductLine(p, parseInt(qty) || 1)}
-              showPrint={false}
-            />
-          )}
         </CardContent>
       </Card>
 
